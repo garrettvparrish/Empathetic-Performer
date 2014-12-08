@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Web Audio API</title>
+<style type="text/css">
+
+</style>
+	<script type="text/javascript">
+		var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		var analyser = audioCtx.createAnalyser();
+	</script>
+</head>
+<body>
+    <p class="play">Play</p>
+    <p class="stop">Stop</p>
+	<audio id="water" src="water.mp3"></audio>
+</body>
+</html>

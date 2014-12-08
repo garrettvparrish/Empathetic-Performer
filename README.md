@@ -1,2 +1,2 @@
-Hyperimprovisation-Server
-=========================
+HyperImprovisation
+==================
