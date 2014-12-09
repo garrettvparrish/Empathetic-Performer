@@ -29,7 +29,6 @@ $(function () {
 			console.log("Socket connection opened.");
 		};
 
-
 		synchronizationSocket.onmessage = function (event) {
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
@@ -41,6 +40,7 @@ $(function () {
 			} else if (message == 'start-sync') {
 				console.log("Starting sync");
 			}
+
 		}
 	}, 2000);
 
@@ -89,14 +89,14 @@ $(function () {
 	    	sum += frequencyData[i];
 	    }
 	    var avg = sum / frequencyData.length;
-	    var normalized = (avg-min)/(max-min);
+	    var normalized = ((avg-min)/(max-min)).toFixed(2);
 	    normalized = normalized < 0.0 ? 0.0 : normalized;
 	    normalized = normalized > 1.0 ? 1.0 : normalized;
 
 	    // triggered audio data
 	    if (normalized != 0) {
 	        console.log(normalized);	
-	        send_message("sync-audio", normalized)	        	
+	        send_message("sync-amp", normalized)	        	
 	    }
 	};
 
