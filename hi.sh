@@ -1,4 +1,4 @@
 echo 'Opening audio sync interface.';
-open audio.html;
+open hyperimprovisation.html;
 echo 'Starting server.';
 node ProductionControl.js;
