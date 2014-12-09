@@ -33,32 +33,54 @@ wss.on('connection', function(ws) {
 
 	// Message handler
     ws.on('message', function(message) {
-		var obj = JSON.parse(message);
-		var mes = obj['message'];
-        var identifier = obj['id'];
-        var data = obj['data'];
 
-    	utils.log("Received: '" + message + "'");
+        // Not an object
+        if (message.indexOf("{") < 0) {
+            utils.log("Invalid message: " + message);
+        // Valid json object
+        } else {
+            var obj = JSON.parse(message);
+            var mes = obj['message'];
+            var identifier = obj['id'];
+            var data = obj['data'];
 
-    	// handshake of the sync device
-    	if (mes == "sync-handshake") {
-    		sync_uuid = identifier;
-	    	utils.log("Synchronization system connected at " + sync_uuid);
+            utils.log("Received: '" + message + "'");
 
-        } else if (mes == "sync-amp") {
-    		utils.log("Audio Data: " + obj['data']);
+            // handshake of the sync device
+            if (mes == "sync-handshake") {
+                sync_uuid = identifier;
+                utils.log("Synchronization system connected at " + sync_uuid);
 
-    	} else if (mes == "identify") {
-    		utils.log("Identifying " + obj['id'] + " as " + obj['data']);
-    		if (data == 'musician-1') {
-    			m1_uuid = identifier;
-    		} else if (data == 'musician-1') {
-    			m2_uuid = identifier;
-    		} else if (data == 'audience') {
-                audience_members.push(identifier);
+            } else if (mes == "sync-amp") {
+                utils.log("Audio Data: " + data);
+
+            } else if (mes == "identify") {
+
+                utils.log("Identifying " + identifier + " as " + data);
+
+                if (data == 'musician-1') {
+                    m1_uuid = identifier;
+
+                } else if (data == 'musician-1') {
+                    m2_uuid = identifier;
+
+                } else if (data == 'audience') {
+                    audience_members.push(identifier);
+                    utils.log("Current Audience Members: " + audience_members);
+                }
+
+            // de-identifying a participant in some way
+            } else if (mes == "de-identify") {
+                utils.log("De-identifying " + identifier + " from " + data);
+                if (data == 'audience') {
+                    var index = array.indexOf(identifier);
+                    if (index > -1) {
+                        audience_members.splice(index, 1);
+                    }
+                }
                 utils.log("Current Audience Members: " + audience_members);
-            }
-    	}
+            }            
+        }
     });
 
 	send_to_id("connection", utils.uuid());
@@ -104,5 +126,5 @@ http.createServer(function(request, response) {
   });
 }).listen(parseInt(port, 10));
  
-utils.log("Static file server running at  => http://localhost:" + port);
+utils.log("Static file server running at http://localhost:" + port);
 

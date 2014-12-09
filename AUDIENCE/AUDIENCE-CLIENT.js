@@ -12,26 +12,29 @@ $(function () {
 		synchronizationSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
 	}
 
-	setTimeout(function () {
-		synchronizationSocket = new WebSocket("ws://localhost:3000", "protocolOne");
-		
-		synchronizationSocket.onopen = function (event) {
-			console.log("Socket connection opened.");
-		};
+	synchronizationSocket = new WebSocket("ws://localhost:3000", "protocolOne");
+	
+	synchronizationSocket.onopen = function (event) {
+		console.log("Socket connection opened.");
+	};
 
-		synchronizationSocket.onmessage = function (event) {
-			var obj = JSON.parse(event.data);
-			uuid = obj['id'];
-			var message = obj['message'];
-			console.log(message);
+	synchronizationSocket.onmessage = function (event) {
+		var obj = JSON.parse(event.data);
+		uuid = obj['id'];
+		var message = obj['message'];
+		console.log(message);
 
-			// Establishing a new connection
-			if (message == 'connection') {
-				var res = {message: "identify", id: uuid, data: 'audience'};
-			  	synchronizationSocket.send(JSON.stringify(res)); 
-			}
+		// Establishing a new connection
+		if (message == 'connection') {
+			var res = {message: "identify", id: uuid, data: 'audience'};
+		  	synchronizationSocket.send(JSON.stringify(res)); 
 		}
-	}, 2000);
+	}
+
+	synchronizationSocket.onclose = function (event) {
+		var res = {message: "de-identify", id: uuid, data: 'audience'};
+	  	synchronizationSocket.send(JSON.stringify(res)); 						
+	}
 
 	////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////

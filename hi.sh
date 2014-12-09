@@ -8,7 +8,9 @@ cd SYNC; open SYNCRONIZATION-CLIENT.html;
 
 echo 'Opening client access point.'
 echo '------------------------------';
-cd ..; cd AUDIENCE; open AUDIENCE-CLIENT.html;
+cd ..; cd AUDIENCE; open http://localhost:8888/;
+
+open http://www.websocket.org/echo.html;
 
 echo 'Starting main server.';
 echo '------------------------------';
