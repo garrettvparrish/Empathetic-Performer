@@ -11,6 +11,7 @@ echo '------------------------------';
 cd ..; cd AUDIENCE; open http://localhost:8888/;
 
 open http://www.websocket.org/echo.html;
+open http://whatismyipaddress.com/;
 
 echo 'Starting main server.';
 echo '------------------------------';

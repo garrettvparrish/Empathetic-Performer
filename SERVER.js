@@ -1,5 +1,5 @@
 // Imports
-var ws = require('ws')
+var socket = require('ws')
 var sys = require("sys"),  
 my_http = require("http"),  
 path = require("path"),  
@@ -9,7 +9,7 @@ filesys = require("fs");
 utils = require("./utils.js");
 audience = require("./audienceControl.js");
 
-var WebSocketServer = ws.Server
+var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
 
 var sync_uuid = "";
@@ -21,22 +21,42 @@ var audience_members = [];
 ////// WEB SOCKET SERVER //////
 ///////////////////////////////
 
-wss.on('connection', function(ws) {
-	utils.log("New client connection.");
+var CLIENTS = {};
 
-	var send_to_id = function (mes, i, d) {
-		// utils.log("Sending '" + mes + "' to " + i + "with data: " + d);
-		d = d ? d : "";
-		var to_send = JSON.stringify({message: mes, id: i, data: d});
-		ws.send(to_send);	
-	} 
+var send_to_id = function (mes, i, d) {
+    d = d ? d : "";
+    utils.log("Sending '" + mes + "' to " + i + " with data: " + d);
+    var to_send = JSON.stringify({message: mes, id: i, data: d});
+    var specificSocket = CLIENTS[i];
+    specificSocket.send(to_send);   
+} 
 
-	// Message handler
-    ws.on('message', function(message) {
+var send_to_all = function (message, data) {
+    for(var c in CLIENTS) {
+        send_to_id(message, c, data);
+    }
+}
+
+var send_to_audience = function (mes, d) {
+    for (i in audience_members) {
+        send_to_id(mes, audience_members[i], d);
+    }
+}
+
+
+// Server connection
+wss.on('connection', function(client_socket) {
+
+	// add a handler
+    client_socket.on('message', function(message) {
 
         // Not an object
         if (message.indexOf("{") < 0) {
             utils.log("Invalid message: " + message);
+            if (message == "ALL") {
+                send_to_all("HELLO");
+            }
+
         // Valid json object
         } else {
             var obj = JSON.parse(message);
@@ -53,6 +73,8 @@ wss.on('connection', function(ws) {
 
             } else if (mes == "sync-amp") {
                 utils.log("Audio Data: " + data);
+                
+                send_to_all("audio-amp", data);
 
             } else if (mes == "identify") {
 
@@ -83,7 +105,12 @@ wss.on('connection', function(ws) {
         }
     });
 
-	send_to_id("connection", utils.uuid());
+    // Initial stuff
+    client_socket.uuid = utils.uuid();
+    var to_send = JSON.stringify({message: "connection", id: client_socket.uuid});
+    client_socket.send(to_send);
+    CLIENTS[client_socket.uuid] = client_socket;
+
 });
 
 ///////////////////////////////

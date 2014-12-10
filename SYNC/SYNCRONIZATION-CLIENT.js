@@ -30,9 +30,11 @@ $(function () {
 		};
 
 		synchronizationSocket.onmessage = function (event) {
+			console.log(event);
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
 			var message = obj['message'];
+			console.log("Received: " + message);
 			// Establishing a new connection
 			if (message == 'connection') {
 				var res = {message: "sync-handshake", id: uuid};
