@@ -14,6 +14,13 @@ var musician1_history = [];
 var musician2_history = [];
 var HISTORY_SIZE = 20;
 
+// length of time (ms) size for a beat to be considered at the same time
+var BEAT_SIZE = 100;
+
+// how far to look back through history to analyze the similarity
+var WINDOW_SIZE = 5000;
+
+
 // Configure a callback.
 input.on('message', function(deltaTime, message) {
 	var mode = message[0];
@@ -43,6 +50,46 @@ input.on('message', function(deltaTime, message) {
 		musician2_history.unshift({'note': note, 'time': timestamp});
 
 		utils.log("Musician 2 history: " + JSON.stringify(musician2_history));
+	}
+
+	// Have the two histories --> do analysis
+	var tracker = 0;
+	var collective_hits = 0;
+
+	while (tracker < WINDOW_SIZE) {
+		// Top and lower bound through out the past x milliseconds
+		var top_bound = timestamp - tracker;
+		var bottom_bound = top_bound - BEAT_SIZE; 
+
+		console.log("Checking " + top_bound + " to " + bottom_bound);
+
+		// check if any elements in both histories that have timestamps lying within this window
+		var m1 = false;
+		var m1_hits = 0;
+		var m2 = false;
+		var m2_hits = 0;
+
+		musician1_history.forEach(function(beat) {
+			if (beat.time < top_bound && beat.time > bottom_bound) {
+				m1 = true;
+				m1_hits += 1;
+			}
+		});
+
+		musician2_history.forEach(function(beat) {
+			if (beat.time < top_bound && beat.time > bottom_bound) {
+				m2 = true;
+				m2_hits += 1;
+			}
+		});
+
+		if (m1 && m2) {
+			collective_hits += 1;
+		}
+
+		var ratio = collective_hits/((m1_hits + m2_hits)/2.0);
+		console.log("Ratio: " + ratio);
+		tracker += BEAT_SIZE;
 	}
 
 });
