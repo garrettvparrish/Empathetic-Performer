@@ -48,6 +48,13 @@ $(function () {
 		if (message == 'connection') {
 			var res = {message: "identify", id: uuid, data: 'audience'};
 		  	audienceMemberSocket.send(JSON.stringify(res)); 
+
+		// Play the audio file
+		} else if (message == 'sync-start') {
+			var water = document.getElementById("water");
+			water.play();
+
+		// Update the display
 		} else if (message == 'audio-amp') {
 			var val = parseFloat(obj['data']);
 			var rgb = "#" + rgbToHex(val * 30, val * 90, val * 255); 
@@ -55,14 +62,10 @@ $(function () {
 
 			if ("vibrate" in navigator) {
 				console.log("vibration supported");
-				main.style.backgroundColor = '#FFFF00';
+				// main.style.backgroundColor = '#FFFF00';
 			} else {
 				console.log("vibration not supported");
 			}
 		}
 	}
-
-	////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////
 });

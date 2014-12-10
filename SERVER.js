@@ -5,9 +5,10 @@ my_http = require("http"),
 path = require("path"),  
 url = require("url"),  
 filesys = require("fs");  
+keyboard = require("./MUSICIANS/KEYBOARD.js")
 
 utils = require("./utils.js");
-musician_feedback = require("./MUSICIAN-FEEDBACK.js");
+musician_feedback = require("./MUSICIANS/MUSICIAN-FEEDBACK.js");
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
@@ -42,14 +43,6 @@ var send_to_audience = function (mes, d) {
         send_to_id(mes, audience_members[i], d);
     }
 }
-
-// Musician feeback 
-var v1 = musician_feedback.vib1();
-var v2 = musician_feedback.vib2();
-var h1 = musician_feedback.hot1();
-var h2 = musician_feedback.hot2();
-var c1 = musician_feedback.cold1();
-var c2 = musician_feedback.cold2();
 
 // Server connection
 wss.on('connection', function(client_socket) {
@@ -88,10 +81,19 @@ wss.on('connection', function(client_socket) {
 
                 // Vibrate the feedback to musicians in correspondence
                 // with the amplitude of the incoming signal
+                
+                // Musician feeback 
+                var v1 = musician_feedback.vib1();
+                var v2 = musician_feedback.vib2();
+                var h1 = musician_feedback.hot1();
+                var h2 = musician_feedback.hot2();
+                var c1 = musician_feedback.cold1();
+                var c2 = musician_feedback.cold2();
+
                 v1.start(data * 255);
                 v2.start(data * 255);
-
-                var h1 = musician_feedback
+                h1.start(255);
+                h2.start(255);
 
             } else if (mes == "identify") {
 
@@ -137,7 +139,7 @@ wss.on('connection', function(client_socket) {
 var http = require("http"),
     url = require("url"),
     path = require("path"),
-    fs = require("fs")
+    fs = require("fs"),
     port = process.argv[2] || 8888;
  
 http.createServer(function(request, response) {

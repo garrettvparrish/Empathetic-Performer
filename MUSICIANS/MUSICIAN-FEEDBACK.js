@@ -4,10 +4,10 @@ var arduino = require("johnny-five");
 audienceControl = new arduino.Board();
 
 // Variables
-var hot1, hot2, cold1, cold2, vib1, vib2;
+var cold2, hot2, cold1, hot1, vib1, vib2;
 
-exports.hot1 = function () {
-	return hot1;
+exports.cold2 = function () {
+	return cold2;
 }
 
 exports.hot2 = function () {
@@ -18,8 +18,8 @@ exports.cold1 = function () {
 	return cold1;
 }
 
-exports.cold2 = function () {
-	return cold2;
+exports.hot1 = function () {
+	return hot1;
 }
 
 exports.vib1 = function () {
@@ -33,7 +33,7 @@ exports.vib2 = function () {
 // audience control
 audienceControl.on("ready", function() {
 	
-	hot1 = new arduino.Motor({
+	cold2 = new arduino.Motor({
 		pin: 12
 	});
 
@@ -45,7 +45,7 @@ audienceControl.on("ready", function() {
 		pin: 8
 	});
 
-	cold2 = new arduino.Motor({
+	hot1 = new arduino.Motor({
 		pin: 9
 	});
 
@@ -57,4 +57,13 @@ audienceControl.on("ready", function() {
 		pin: 5
 	});
 
+	console.log("Starting hot 1");
+
+	// cold2.start(255);
+	hot2.start(255);
+
 });
+
+
+
+
