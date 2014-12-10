@@ -41,6 +41,8 @@ $(function () {
 			  	synchronizationSocket.send(JSON.stringify(res)); 
 			} else if (message == 'start-sync') {
 				console.log("Starting sync");
+				var res = {message: "sync-start", id: uuid};
+				synchronizationSocket.send(JSON.stringify(res));
 			}
 
 		}

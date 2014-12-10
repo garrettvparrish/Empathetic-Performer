@@ -7,7 +7,7 @@ url = require("url"),
 filesys = require("fs");  
 
 utils = require("./utils.js");
-audience = require("./audienceControl.js");
+musician_feedback = require("./MUSICIAN-FEEDBACK.js");
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
@@ -43,6 +43,13 @@ var send_to_audience = function (mes, d) {
     }
 }
 
+// Musician feeback 
+var v1 = musician_feedback.vib1();
+var v2 = musician_feedback.vib2();
+var h1 = musician_feedback.hot1();
+var h2 = musician_feedback.hot2();
+var c1 = musician_feedback.cold1();
+var c2 = musician_feedback.cold2();
 
 // Server connection
 wss.on('connection', function(client_socket) {
@@ -71,10 +78,20 @@ wss.on('connection', function(client_socket) {
                 sync_uuid = identifier;
                 utils.log("Synchronization system connected at " + sync_uuid);
 
+            } else if (mes == "sync-start") {
+                utils.log("Starting synchronization.");
+                send_to_all("sync-start", "");
+
             } else if (mes == "sync-amp") {
-                utils.log("Audio Data: " + data);
-                
+                utils.log("Audio Data: " + data);                
                 send_to_all("audio-amp", data);
+
+                // Vibrate the feedback to musicians in correspondence
+                // with the amplitude of the incoming signal
+                v1.start(data * 255);
+                v2.start(data * 255);
+
+                var h1 = musician_feedback
 
             } else if (mes == "identify") {
 

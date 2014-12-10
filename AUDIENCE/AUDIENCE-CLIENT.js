@@ -51,10 +51,15 @@ $(function () {
 		} else if (message == 'audio-amp') {
 			var val = parseFloat(obj['data']);
 			var rgb = "#" + rgbToHex(val * 30, val * 90, val * 255); 
-			console.log(rgb);
 			main.style.backgroundColor = rgb;
-		}
 
+			if ("vibrate" in navigator) {
+				console.log("vibration supported");
+				main.style.backgroundColor = '#FFFF00';
+			} else {
+				console.log("vibration not supported");
+			}
+		}
 	}
 
 	////////////////////////////////////////////////////////
