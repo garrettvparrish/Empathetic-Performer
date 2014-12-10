@@ -26,7 +26,7 @@ var CLIENTS = {};
 
 var send_to_id = function (mes, i, d) {
     d = d ? d : "";
-    utils.log("Sending '" + mes + "' to " + i + " with data: " + d);
+    // utils.log("Sending '" + mes + "' to " + i + " with data: " + d);
     var to_send = JSON.stringify({message: mes, id: i, data: d});
     var specificSocket = CLIENTS[i];
     specificSocket.send(to_send);   
@@ -71,17 +71,15 @@ wss.on('connection', function(client_socket) {
                 sync_uuid = identifier;
                 utils.log("Synchronization system connected at " + sync_uuid);
 
-            } else if (mes == "sync-start") {
+            } else if (mes == "trigger-sync") {
                 utils.log("Starting synchronization.");
-                send_to_all("sync-start", "");
-
+                send_to_all("start-sync", "");
             } else if (mes == "sync-amp") {
                 utils.log("Audio Data: " + data);                
                 send_to_all("audio-amp", data);
 
                 // Vibrate the feedback to musicians in correspondence
-                // with the amplitude of the incoming signal
-                
+                // with the amplitude of the incoming signal                
                 // Musician feeback 
                 var v1 = musician_feedback.vib1();
                 var v2 = musician_feedback.vib2();

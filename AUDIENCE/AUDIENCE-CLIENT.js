@@ -34,6 +34,7 @@ $(function () {
 		var obj = JSON.parse(event.data);
 		var message = obj['message'];
 		var data = obj['data'];
+		console.log(event.data);
 
 		// Establishing a new connection -- send a handshake
 		if (message == 'connection') {
@@ -43,12 +44,18 @@ $(function () {
 		  	audienceMemberSocket.send(JSON.stringify(res)); 
 
 		// Play the audio file
-		} else if (message == 'sync-start') {
+		} 
+
+		if (message == 'start-sync') {
+			console.log("Playing sound");
+
 			var water = document.getElementById("water");
 			water.play();
 
 		// Update the display
-		} else if (message == 'audio-amp') {
+		}
+
+		if (message == 'audio-amp') {
 			var val = parseFloat(data);
 			var rgb = "#" + rgbToHex(val * 30, val * 90, val * 255); 
 			main.style.backgroundColor = rgb;

@@ -39,12 +39,7 @@ $(function () {
 			if (message == 'connection') {
 				var res = {message: "sync-handshake", id: uuid};
 			  	synchronizationSocket.send(JSON.stringify(res)); 
-			} else if (message == 'start-sync') {
-				console.log("Starting sync");
-				var res = {message: "sync-start", id: uuid};
-				synchronizationSocket.send(JSON.stringify(res));
 			}
-
 		}
 	}, 2000);
 
@@ -120,8 +115,11 @@ $(function () {
 
     var syncButton = document.getElementById("sync");
     syncButton.addEventListener('mousedown', function () {
+    	console.log("STARTING SYNC");
+    	send_message("trigger-sync", "");	        	
     	var water = document.getElementById('water');
 		water.play();
+
     }, false);
 
 	var v = 0;
