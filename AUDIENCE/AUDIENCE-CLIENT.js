@@ -18,8 +18,7 @@ $(function () {
 	var uuid = "";
 	var audienceMemberSocket;
 	
-
-	audienceMemberSocket = new WebSocket("ws://18.111.9.98:3000", "protocolOne");
+	audienceMemberSocket = new WebSocket("ws://18.111.16.237:3000", "protocolOne");
 
 	var send_message = function (key, d) {
 		audienceMemberSocket.send(JSON.stringify({message: key, id: uuid, data: d}));

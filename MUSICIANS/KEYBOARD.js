@@ -56,6 +56,9 @@ input.on('message', function(deltaTime, message) {
 	var tracker = 0;
 	var collective_hits = 0;
 
+	var m1_hits = 0;
+	var m2_hits = 0;
+
 	while (tracker < WINDOW_SIZE) {
 		// Top and lower bound through out the past x milliseconds
 		var top_bound = timestamp - tracker;
@@ -65,21 +68,19 @@ input.on('message', function(deltaTime, message) {
 
 		// check if any elements in both histories that have timestamps lying within this window
 		var m1 = false;
-		var m1_hits = 0;
 		var m2 = false;
-		var m2_hits = 0;
 
 		musician1_history.forEach(function(beat) {
 			if (beat.time < top_bound && beat.time > bottom_bound) {
 				m1 = true;
-				m1_hits += 1;
+				m1_hits = m1_hits + 1;
 			}
 		});
 
 		musician2_history.forEach(function(beat) {
 			if (beat.time < top_bound && beat.time > bottom_bound) {
 				m2 = true;
-				m2_hits += 1;
+				m2_hits = m2_hits + 1;
 			}
 		});
 
@@ -87,8 +88,15 @@ input.on('message', function(deltaTime, message) {
 			collective_hits += 1;
 		}
 
-		var ratio = collective_hits/((m1_hits + m2_hits)/2.0);
+		console.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
+		console.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
+		console.log("Both musicians hit at the same time " + collective_hits + " times");
+
+		// Calculates the rythmic syncrony 
+		var ratio = collective_hits/(m1_hits/2 + m2_hits/2);
 		console.log("Ratio: " + ratio);
+
+
 		tracker += BEAT_SIZE;
 	}
 
