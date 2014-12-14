@@ -6,6 +6,15 @@ audienceControl = new arduino.Board();
 // Variables
 var cold2, hot2, cold1, hot1, vib1, vib2;
 
+exports.setVibes = function (i) {
+	vib1.start(i * 255);
+	vib2.start(i * 255);
+	cold1.start(i * 255);
+	cold2.start(i * 255);
+	hot1.start(i * 255);
+	hot2.start(i * 255);
+}
+
 exports.cold2 = function () {
 	return cold2;
 }
@@ -33,21 +42,23 @@ exports.vib2 = function () {
 // audience control
 audienceControl.on("ready", function() {
 	
-	cold2 = new arduino.Motor({
+	cold1 = new arduino.Motor({
+		pin: 13
+	});
+
+	hot1 = new arduino.Motor({
 		pin: 12
 	});
 
-	cold1 = new arduino.Motor({
-		pin: 13
+
+	cold2 = new arduino.Motor({
+		pin: 9
 	});
 
 	hot2 = new arduino.Motor({
 		pin: 8
 	});
 
-	hot1 = new arduino.Motor({
-		pin: 9
-	});
 
 	vib1 = new arduino.Motor({
 		pin: 3

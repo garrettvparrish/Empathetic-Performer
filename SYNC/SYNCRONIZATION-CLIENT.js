@@ -119,13 +119,49 @@ $(function () {
     	send_message("trigger-sync", "");	        	
     	var water = document.getElementById('water');
 		water.play();
-
     }, false);
 
 	var v = 0;
 	var t = 0;
 
-	var drawresetButton = function () {
+	var vibrationControl = document.getElementById("vibrationControl");
+	vibrationControl.addEventListener('mousedown', function () {
+		console.log("RESSED");
+	}, false);
+	vibrationControl.addEventListener('mousemove', vibrationHandler, false);
+
+	var vibrationHandler = function (e) {		
+		var rect = vibrationControl.getBoundingClientRect();
+		var y = e.clientY - rect.top;
+		var dir = FWD;
+		var height = 400;
+		var percentage = (y - (height/2)) / (height/2);
+
+		// Update global
+		v = percentage;
+		console.log(v);
+		drawvibrationControl();
+	}
+
+	var temperatureControl = document.getElementById("temperatureControl");
+	temperatureControl.addEventListener('mousedown', temperatureHandler, false);
+	temperatureControl.addEventListener('mousemove', temperatureHandler, false);
+
+	var temperatureHandler = function (e) {		
+		var rect = temperatureControl.getBoundingClientRect();
+		var y = e.clientY - rect.top;
+		var dir = FWD;
+		var height = 400;
+		var percentage = (y - (height/2)) / (height/2);
+
+		// Update global
+		t = percentage;
+		console.log(t);
+		drawtemperatureControl();
+	}
+
+	var drawSyncButton = function () {
+
 		// Background
 		var ctx = document.getElementById("sync").getContext("2d");
 		ctx.beginPath();
@@ -138,7 +174,9 @@ $(function () {
 		// Text
 		ctx.fillStyle = "#000000";
 		ctx.font="30px Verdana";
-		ctx.fillText("SYNC", 100, 90);}
+		ctx.fillText("SYNC", 100, 90);
+	}
+
 	var deadZoneColor = "blue";
 	var activeZoneColor = "gray";
 	var positionIndicatorColor = "white";
@@ -167,7 +205,9 @@ $(function () {
 		ctx.lineWidth = 5;
 		ctx.moveTo(0, pos);
 		ctx.lineTo(width, pos);
-	    ctx.stroke(); }
+	    ctx.stroke(); 
+	}
+
 	var drawtemperatureControl = function (_x,_y) {
 		var rotational = document.getElementById("temperatureControl")
 		var ctx = rotational.getContext("2d");
@@ -199,7 +239,7 @@ $(function () {
 	////////////////////////////////////////////////////////
 
 	// draw ui when page is ready
-	drawresetButton();
+	drawSyncButton();
 	drawvibrationControl(0);
 	drawtemperatureControl(0,0);
 });
