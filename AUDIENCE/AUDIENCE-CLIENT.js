@@ -12,13 +12,13 @@ $(function () {
 	    return "0123456789ABCDEF".charAt((n - n % 16) / 16) + "0123456789ABCDEF".charAt(n % 16);
 	}
 
-	var main = document.getElementById("main");
+	var main = document.getElementById("body");
 	
 	// Web socket connections
 	var uuid = "";
 	var audienceMemberSocket;
 	
-	audienceMemberSocket = new WebSocket("ws://18.111.16.237:3000", "protocolOne");
+	audienceMemberSocket = new WebSocket("ws://18.111.6.189:3000", "protocolOne");
 
 	var send_message = function (key, d) {
 		audienceMemberSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
@@ -57,7 +57,7 @@ $(function () {
 		if (message == 'audio-amp') {
 			var val = parseFloat(data);
 			var rgb = "#" + rgbToHex(val * 30, val * 90, val * 255); 
-			main.style.backgroundColor = rgb;
+			document.body.style.backgroundColor = rgb;
 		}
 	}
 });

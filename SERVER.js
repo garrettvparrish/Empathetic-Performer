@@ -88,12 +88,14 @@ wss.on('connection', function(client_socket) {
                 var c1 = musician_feedback.cold1();
                 var c2 = musician_feedback.cold2();
 
-                v1.start(data * 255);
-                v2.start(data * 255);
-                h1.start(data * 255);
-                h2.start(data * 255);
-                c1.start(data * 255);
-                c2.start(data * 255);
+                if (v1 && v2 & h1 & h2 & c1 & c2) {
+                    v1.start(data * 255);
+                    v2.start(data * 255);
+                    h1.start(data * 255);
+                    h2.start(data * 255);
+                    c1.start(data * 255);
+                    c2.start(data * 255);                    
+                }
 
             } else if (mes == "identify") {
 
@@ -155,7 +157,7 @@ http.createServer(function(request, response) {
       return;
     }
  
-    if (fs.statSync(filename).isDirectory()) filename += 'AUDIENCE/AUDIENCE-CLIENT.html';
+    if (fs.statSync(filename).isDirectory()) filename += 'AUDIENCE/audience.html';//AUDIENCE-CLIENT.html';
  
     fs.readFile(filename, "binary", function(err, file) {
       if(err) {        
