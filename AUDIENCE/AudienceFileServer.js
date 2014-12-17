@@ -1,7 +1,9 @@
+utils = require("../lib/utils");
+
 var http = require("http"),
     url = require("url"),
     path = require("path"),
-    fs = require("fs")
+    fs = require("fs"),
     port = process.argv[2] || 8888;
  
 http.createServer(function(request, response) {
@@ -17,7 +19,7 @@ http.createServer(function(request, response) {
       return;
     }
  
-    if (fs.statSync(filename).isDirectory()) filename += '/AUDIENCE.html';
+    if (fs.statSync(filename).isDirectory()) filename += 'audience/Audience.html';
  
     fs.readFile(filename, "binary", function(err, file) {
       if(err) {        
@@ -34,4 +36,4 @@ http.createServer(function(request, response) {
   });
 }).listen(parseInt(port, 10));
  
-console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+utils.log("Static file server running at http://localhost:" + port);

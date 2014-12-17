@@ -4,11 +4,10 @@ var sys = require("sys"),
 my_http = require("http"),  
 path = require("path"),  
 url = require("url"),  
-filesys = require("fs");  
-// keyboard = require("./MUSICIANS/KEYBOARD.js")
-
-utils = require("./utils.js");
-musician_feedback = require("./MUSICIANS/MUSICIAN-FEEDBACK.js");
+filesys = require("fs");
+audience = require("./audience/AudienceFileServer.js")
+utils = require("./lib/utils.js");
+musician_feedback = require("./musician/BiometricFeedback.js");
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
@@ -134,51 +133,6 @@ wss.on('connection', function(client_socket) {
 
 });
 
-///////////////////////////////
-//// AUDIENCE FILES SERVER ////
-///////////////////////////////
-
-var http = require("http"),
-    url = require("url"),
-    path = require("path"),
-    fs = require("fs"),
-    port = process.argv[2] || 8888;
- 
-http.createServer(function(request, response) {
- 
-  var uri = url.parse(request.url).pathname
-    , filename = path.join(process.cwd(), uri);
-  
-  path.exists(filename, function(exists) {
-    if(!exists) {
-      response.writeHead(404, {"Content-Type": "text/plain"});
-      response.write("404 Not Found\n");
-      response.end();
-      return;
-    }
- 
-    if (fs.statSync(filename).isDirectory()) filename += 'AUDIENCE/audience.html';//AUDIENCE-CLIENT.html';
- 
-    fs.readFile(filename, "binary", function(err, file) {
-      if(err) {        
-        response.writeHead(500, {"Content-Type": "text/plain"});
-        response.write(err + "\n");
-        response.end();
-        return;
-      }
- 
-      response.writeHead(200);
-      response.write(file, "binary");
-      response.end();
-    });
-  });
-}).listen(parseInt(port, 10));
- 
-utils.log("Static file server running at http://localhost:" + port);
-
-
-
-
 /////////////////////////////////
 // MIDI LISTENER & INTERPRETER //
 /////////////////////////////////
@@ -196,7 +150,8 @@ input.getPortName(0);
 
 var musician1_history = [];
 var musician2_history = [];
-var HISTORY_SIZE = 20;
+
+var HISTORY_SIZE = 200;
 
 // length of time (ms) size for a beat to be considered at the same time
 var BEAT_SIZE = 100;
@@ -204,38 +159,20 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var WINDOW_SIZE = 5000;
 
-// Configure a callback.
-input.on('message', function(deltaTime, message) {
-    var mode = message[0];
-    var note = parseInt(message[1]);
-    var vel = message[2];
-
+// Compute statistics 10x a second
+setInterval(function () {
     var d = new Date();
+    var t = d.getTime();
+    var rs = rythmicSynchronicity(t);
 
-    // in milliseconds
-    var timestamp = d.getTime();
+}, 100)
 
-    if (note >= 60) {
-        utils.log("Musician 1 input: " + note + " at " + timestamp);
-        
-        if (musician1_history.length >= HISTORY_SIZE) {
-            musician1_history.pop();
-        }
-        musician1_history.unshift({'note': note, 'time': timestamp});
-        utils.log("Musician 1 history: " + JSON.stringify(musician1_history));
+//////////////////////////////////////////////
+/////////// RHYTHMIC SYNCHRONICITY ///////////
+//////////////////////////////////////////////
 
-    } else {
-        utils.log("Musician 2 input: " + note + " at " + timestamp);
+function rythmicSynchronicity(timestamp) {
 
-        if (musician2_history.length >= HISTORY_SIZE) {
-            musician2_history.pop();
-        }
-        musician2_history.unshift({'note': note, 'time': timestamp});
-
-        utils.log("Musician 2 history: " + JSON.stringify(musician2_history));
-    }
-
-    // Have the two histories --> do analysis
     var tracker = 0;
     var collective_hits = 0;
 
@@ -246,8 +183,6 @@ input.on('message', function(deltaTime, message) {
         // Top and lower bound through out the past x milliseconds
         var top_bound = timestamp - tracker;
         var bottom_bound = top_bound - BEAT_SIZE; 
-
-        console.log("Checking " + top_bound + " to " + bottom_bound);
 
         // check if any elements in both histories that have timestamps lying within this window
         var m1 = false;
@@ -271,32 +206,48 @@ input.on('message', function(deltaTime, message) {
             collective_hits += 1;
         }
 
-        console.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
-        console.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
-        console.log("Both musicians hit at the same time " + collective_hits + " times");
-
-        // Calculates the rythmic syncrony 
-        var ratio = collective_hits/(m1_hits/2 + m2_hits/2) + .2;
-        if (isNaN(ratio)) {
-            ratio = 0.0;
-        }
-
-        console.log("Ratio: " + ratio);
-
-        // turn on vibrators according to sychrony
-        musician_feedback.setVibes(ratio);
-            
-        // trigger the audience
-        send_to_all('audio-amp', ratio);
-
         tracker += BEAT_SIZE;
     }
 
+    m1_hits = m1_hits/2;
+    m2_hits = m2_hits/2;
 
+    utils.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
+    utils.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
 
+    // Calculates the rythmic syncrony 
+    var ratio = collective_hits/(m1_hits + m2_hits);
+    utils.log("Ratio: " + ratio);
+}
 
+// Update histories with current 
+input.on('message', function(deltaTime, message) {
+    var mode = message[0];
+    var note = parseInt(message[1]);
+    var vel = message[2];
 
+    // in milliseconds
+    var d = new Date();
+    var timestamp = d.getTime();
 
+    if (note >= 60) {
+        utils.log("Musician 1 input: " + note + " at " + timestamp);
+        
+        if (musician1_history.length >= HISTORY_SIZE) {
+            musician1_history.pop();
+        }
+        musician1_history.unshift({'note': note, 'time': timestamp});
+        // utils.log("Musician 1 history: " + JSON.stringify(musician1_history));
+
+    } else {
+        utils.log("Musician 2 input: " + note + " at " + timestamp);
+
+        if (musician2_history.length >= HISTORY_SIZE) {
+            musician2_history.pop();
+        }
+        musician2_history.unshift({'note': note, 'time': timestamp});
+        // utils.log("Musician 2 history: " + JSON.stringify(musician2_history));
+    }
 });
 
 // Open the first available input port.

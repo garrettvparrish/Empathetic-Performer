@@ -2,17 +2,17 @@ osascript -e 'quit app "CHROME"';
 sleep 1;
 echo '------------------------------';
 
-echo 'Opening audio sync interface.';
+echo 'Opening Production Control.';
 echo '------------------------------';
-cd SYNC; open SYNCRONIZATION-CLIENT.html;
+cd production; open ProductionControl.html; cd ..;
 
-echo 'Opening client access point.'
+echo 'Opening Audience Visuals.'
 echo '------------------------------';
-cd ..; cd AUDIENCE; open http://localhost:8888/;
+cd audience; open http://localhost:8888/;
 
-open http://www.websocket.org/echo.html;
-open http://whatismyipaddress.com/;
+# open http://www.websocket.org/echo.html;
+# open http://whatismyipaddress.com/;
 
-echo 'Starting main server.';
+echo 'Starting Empathetic Performer.';
 echo '------------------------------';
-cd ..; node SERVER.js;
+cd ..; node EmpatheticPerformer.js;

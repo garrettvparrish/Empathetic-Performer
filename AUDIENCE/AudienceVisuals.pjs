@@ -1,14 +1,3 @@
-//
-//  Home Page Emitter
-//  by Scott Murray
-//  September 22, 2011
-//
-//  I can tell you care, because you are reading the source code. Awesome!
-//
-//////////////////////////////////////////////////////////////////////////
-
-
-
 /////////////////
 //  VARIABLES  //
 /////////////////
@@ -20,20 +9,15 @@ if (window.innerWidth <= 480) {
 	numParticles = 50;
 }
 
-
 float maxVelocity = 10;
 Particle[] particles = new Particle[numParticles];
 float newHueVal = random(0, 100);
-
-
 
 /////////////
 //  SETUP  //
 /////////////
 
 void setup() {
-
-	console.log("SETTING UP DISPLAY");
 	size(window.innerWidth, window.innerHeight);
 
 	frameRate(30);
@@ -48,8 +32,6 @@ void setup() {
 		particles[i] = new Particle(x, y, d);
 	}
 }
-
-
 
 ////////////
 //  DRAW  //
