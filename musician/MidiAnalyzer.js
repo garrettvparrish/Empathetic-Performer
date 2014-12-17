@@ -73,7 +73,7 @@ exports.rythmicSynchronicity = function (timestamp) {
 
     // Calculates the rythmic syncrony 
     var ratio = collective_hits/(m1_hits + m2_hits);
-    // utils.log("Ratio: " + ratio);
+    ratio = (isNaN(ratio)) ? 0 : ratio;
     return ratio
 }
 

@@ -125,11 +125,13 @@ $(function () {
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
 			var message = obj['message'];
-			console.log("Received: " + message);
+			console.log("Received: " + event.data);
 			// Establishing a new connection
 			if (message == 'connection') {
-				var res = {message: "sync-handshake", id: uuid};
+				var res = {message: "production-handshake", id: uuid};
 			  	synchronizationSocket.send(JSON.stringify(res)); 
+			} else if ( message == 'collective') {
+				console.log("COLLLLLECTIIIIIVE");
 			}
 		}
 	}, 2000);
