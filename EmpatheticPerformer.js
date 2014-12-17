@@ -151,4 +151,10 @@ setInterval(function () {
     var rs = midi_analyzer.rythmicSynchronicity(t);
     // utils.log("RS: " + rs);
     update_production('collective', 'rs', rs);
+    update_production('collective', 'ms', 0);
+    update_production('collective', 'trust', 0);
+    update_production('collective', 'empathy', 0);
+    update_production('collective', 'rc', 0);
+    update_production('collective', 'hc', 0);
+
 }, 100)

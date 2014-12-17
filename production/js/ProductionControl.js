@@ -32,11 +32,64 @@ $(function () {
 						        componentName: 'RS',
 						        componentState: { text: 'RS' },
 				                isClosable: false
+					    	}]
+					},
+					{
+						type: 'column',
+						content: [
+					    	{
+						        type:'component',
+						        componentName: 'MS',
+						        componentState: { text: 'MS' },
+				                isClosable: false
 					    	}
-
+						]
+					},
+					{
+						type: 'column',
+						content: [
+					    	{
+						        type:'component',
+						        componentName: 'Empathy',
+						        componentState: { text: 'Empathy' },
+				                isClosable: false
+					    	}
+						]
+					},
+					{
+						type: 'column',
+						content: [
+					    	{
+						        type:'component',
+						        componentName: 'Trust',
+						        componentState: { text: 'Trust' },
+				                isClosable: false
+					    	}
+						]
+					},
+					{
+						type: 'column',
+						content: [
+					    	{
+						        type:'component',
+						        componentName: 'Harmonic Change',
+						        componentState: { text: 'Harmonic Change' },
+				                isClosable: false
+					    	}
+						]
+					},
+					{
+						type: 'column',
+						content: [
+					    	{
+						        type:'component',
+						        componentName: 'Rhythmic Change',
+						        componentState: { text: 'Rhythmic Change' },
+				                isClosable: false
+					    	}
 						]
 					}
-			  	]
+				]
 			},
 			{
 			    type: 'row',
@@ -77,10 +130,42 @@ $(function () {
 		el.html( '<h2>' + state.text + '</h2>');
 	});
 
+	// Collective Attributes
+
 	var RS;
 	myLayout.registerComponent( 'RS', function( container, state ){
 		RS = container.getElement();
 		RS.html( '<h2>' + state.text + '</h2>');
+	});
+
+	var MS;
+	myLayout.registerComponent( 'MS', function( container, state ){
+		MS = container.getElement();
+		MS.html( '<h2>' + state.text + '</h2>');
+	});
+
+	var TRUST;
+	myLayout.registerComponent( 'Trust', function( container, state ){
+		TRUST = container.getElement();
+		TRUST.html( '<h2>' + state.text + '</h2>');
+	});
+
+	var EMPATHY;
+	myLayout.registerComponent( 'Empathy', function( container, state ){
+		EMPATHY = container.getElement();
+		EMPATHY.html( '<h2>' + state.text + '</h2>');
+	});
+
+	var RC;
+	myLayout.registerComponent( 'Rhythmic Change', function( container, state ){
+		RC = container.getElement();
+		RC.html( '<h2>' + state.text + '</h2>');
+	});
+
+	var HC;
+	myLayout.registerComponent( 'Harmonic Change', function( container, state ){
+		HC = container.getElement();
+		HC.html( '<h2>' + state.text + '</h2>');
 	});
 
 	myLayout.registerComponent( 'Musician 1', function( container, state ){
@@ -142,6 +227,16 @@ $(function () {
 			// Updating UI
 			} else if ( message == 'collective-rs') {
 				RS.html('<h2>' + data + '</h2>')
+			} else if (message == 'collective-ms') {	
+				MS.html('<h2>' + data + '</h2>')						
+			} else if ( message == 'collective-trust') {
+				TRUST.html('<h2>' + data + '</h2>')
+			} else if ( message == 'collective-empathy') {
+				EMPATHY.html('<h2>' + data + '</h2>')
+			} else if ( message == 'collective-rc') {
+				RC.html('<h2>' + data + '</h2>')
+			} else if ( message == 'collective-hc') {
+				HC.html('<h2>' + data + '</h2>')
 			}
 		}
 	}, 2000);
