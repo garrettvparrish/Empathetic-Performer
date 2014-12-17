@@ -25,11 +25,17 @@ $(function () {
 			    type: 'row',
 			    content: [
 			    	{
-				        type:'component',
-				        componentName: 'Collective Attributes',
-				        componentState: { text: 'Collective Attributes' },
-		                isClosable: false
-			    	}
+			    		type: 'column',
+						content: [					
+					    	{
+						        type:'component',
+						        componentName: 'RS',
+						        componentState: { text: 'RS' },
+				                isClosable: false
+					    	}
+
+						]
+					}
 			  	]
 			},
 			{
@@ -71,8 +77,10 @@ $(function () {
 		el.html( '<h2>' + state.text + '</h2>');
 	});
 
-	myLayout.registerComponent( 'Collective Attributes', function( container, state ){
-	  container.getElement().html( '<h2>' + state.text + '</h2>');
+	var RS;
+	myLayout.registerComponent( 'RS', function( container, state ){
+		RS = container.getElement();
+		RS.html( '<h2>' + state.text + '</h2>');
 	});
 
 	myLayout.registerComponent( 'Musician 1', function( container, state ){
@@ -121,17 +129,19 @@ $(function () {
 		};
 
 		synchronizationSocket.onmessage = function (event) {
-			console.log(event);
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
 			var message = obj['message'];
-			console.log("Received: " + event.data);
-			// Establishing a new connection
+			var data = obj['data'];
+
+			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
 			  	synchronizationSocket.send(JSON.stringify(res)); 
-			} else if ( message == 'collective') {
-				console.log("COLLLLLECTIIIIIVE");
+
+			// Updating UI
+			} else if ( message == 'collective-rs') {
+				RS.html('<h2>' + data + '</h2>')
 			}
 		}
 	}, 2000);
