@@ -10,7 +10,14 @@ input.getPortCount();
 input.getPortName(0);
 
 var musician1_history = [];
+exports.musician1_history = function () {
+    return musician1_history;
+}
+
 var musician2_history = [];
+exports.musician2_history = function () {
+    return musician2_history;
+}
 
 var HISTORY_SIZE = 200;
 
@@ -20,15 +27,7 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var WINDOW_SIZE = 5000;
 
-// Compute statistics 10x a second
-setInterval(function () {
-    var d = new Date();
-    var t = d.getTime();
-    var rs = rythmicSynchronicity(t);
-
-}, 100)
-
-function rythmicSynchronicity(timestamp) {
+exports.rythmicSynchronicity = function (timestamp) {
 
     var tracker = 0;
     var collective_hits = 0;
@@ -69,12 +68,13 @@ function rythmicSynchronicity(timestamp) {
     m1_hits = m1_hits/2;
     m2_hits = m2_hits/2;
 
-    utils.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
-    utils.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
+    // utils.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
+    // utils.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
 
     // Calculates the rythmic syncrony 
     var ratio = collective_hits/(m1_hits + m2_hits);
-    utils.log("Ratio: " + ratio);
+    // utils.log("Ratio: " + ratio);
+    return ratio
 }
 
 // Update histories with current 

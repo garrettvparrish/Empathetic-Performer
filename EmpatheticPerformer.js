@@ -1,4 +1,5 @@
 // Imports
+
 var socket = require('ws')
 var sys = require("sys"),  
 my_http = require("http"),  
@@ -9,11 +10,15 @@ audience = require("./audience/AudienceFileServer.js")
 utils = require("./lib/utils.js");
 musician_feedback = require("./musician/BiometricFeedback.js");
 midi_analyzer = require("./musician/MidiAnalyzer.js");
+strings = require("./strings.js");
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
 
-var sync_uuid = "";
+var CLIENTS = {};
+
+var production_control = "";
+var production_socket;
 var m1_uuid = "";
 var m2_uuid = "";
 var audience_members = [];
@@ -22,7 +27,11 @@ var audience_members = [];
 ////// WEB SOCKET SERVER //////
 ///////////////////////////////
 
-var CLIENTS = {};
+var update_production = function (section, key, val) {
+    if (production_socket) {
+        production_socket.send(JSON.stringify({message:section+'-'+key, data:val}))        
+    }
+}
 
 var send_to_id = function (mes, i, d) {
     d = d ? d : "";
@@ -48,14 +57,11 @@ var send_to_audience = function (mes, d) {
 wss.on('connection', function(client_socket) {
 
 	// add a handler
-    client_socket.on('message', function(message) {
+    client_socket.on(strings.MESSAGE, function(message) {
 
         // Not an object
         if (message.indexOf("{") < 0) {
             utils.log("Invalid message: " + message);
-            if (message == "ALL") {
-                send_to_all("HELLO");
-            }
 
         // Valid json object
         } else {
@@ -68,13 +74,17 @@ wss.on('connection', function(client_socket) {
 
             // handshake of the sync device
             if (mes == "sync-handshake") {
-                sync_uuid = identifier;
-                utils.log("Synchronization system connected at " + sync_uuid);
+                production_control = identifier;
+                production_socket = CLIENTS[identifier];
+                utils.log("Production system connected at " + production_control);
 
             } else if (mes == "trigger-sync") {
+
                 utils.log("Starting synchronization.");
-                send_to_all("start-sync", "");
+                send_to_all("start-sync", ""); 
+
             } else if (mes == "sync-amp") {
+
                 utils.log("Audio Data: " + data);                
                 send_to_all("audio-amp", data);
 
@@ -131,7 +141,14 @@ wss.on('connection', function(client_socket) {
     var to_send = JSON.stringify({message: "connection", id: client_socket.uuid});
     client_socket.send(to_send);
     CLIENTS[client_socket.uuid] = client_socket;
-    
+
 });
 
-
+// Compute statistics 10x a second
+setInterval(function () {
+    var d = new Date();
+    var t = d.getTime();
+    var rs = midi_analyzer.rythmicSynchronicity(t);
+    utils.log("RS: " + rs);
+    update_production('collective', 'rs', rs);
+}, 100)
