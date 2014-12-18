@@ -1,15 +1,16 @@
 // Imports
 
-var socket = require('ws')
-var sys = require("sys"),  
+var socket = require('ws'),
+sys = require("sys"),  
 my_http = require("http"),  
 path = require("path"),  
 url = require("url"),  
-filesys = require("fs");
-audience = require("./audience/AudienceFileServer.js")
-utils = require("./lib/utils.js");
-musician_feedback = require("./musician/BiometricFeedback.js");
+filesys = require("fs"),
+audience = require("./audience/AudienceFileServer.js"),
+utils = require("./lib/utils.js"),
+musician_feedback = require("./musician/BiometricFeedback.js"),
 midi_analyzer = require("./musician/MidiAnalyzer.js");
+
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
@@ -135,7 +136,6 @@ wss.on('connection', function(client_socket) {
         }
     });
 
-    utils.log("New client.");
     // Initial stuff
     client_socket.uuid = utils.uuid();
     var to_send = JSON.stringify({message: "connection", id: client_socket.uuid});
@@ -158,3 +158,13 @@ setInterval(function () {
     update_production('collective', 'hc', 0);
 
 }, 100)
+
+var midi = midi_analyzer.midiEmitter();
+midi.on('musician-1-midi', function (data) {
+    update_production('musician-1', 'midi', data)
+});
+
+midi.on('musician-2-midi', function (data) {
+    update_production('musician-2', 'midi', data)
+})
+

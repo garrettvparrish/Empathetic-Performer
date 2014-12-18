@@ -168,16 +168,22 @@ $(function () {
 		HC.html( '<h2>' + state.text + '</h2>');
 	});
 
+	var M1;
 	myLayout.registerComponent( 'Musician 1', function( container, state ){
-	  container.getElement().html( '<h2>' + state.text + '</h2>');
+	    M1 = container.getElement();
+	    M1.html( '<h2>' + state.text + '</h2>');
 	});
 
+	var M2;
 	myLayout.registerComponent( 'Musician 2', function( container, state ){
-	  container.getElement().html( '<h2>' + state.text + '</h2>');
+		M2 = container.getElement();
+		M2.html( '<h2>' + state.text + '</h2>');
 	});
 
+	var AUDIENCE;
 	myLayout.registerComponent( 'Audience', function( container, state ){
-	  container.getElement().html( '<h2>' + state.text + '</h2>');
+  	    AUDIENCE = container.getElement();
+  	    AUDIENCE.html( '<h2>' + state.text + '</h2>');
 	});
 
 	myLayout.init();
@@ -237,6 +243,10 @@ $(function () {
 				RC.html('<h2>' + data + '</h2>')
 			} else if ( message == 'collective-hc') {
 				HC.html('<h2>' + data + '</h2>')
+			} else if (message == 'musician-1-midi') {
+				M1.html('<h2>' + data + '</h2>')
+			} else if (message == 'musician-2-midi') {
+				M2.html('<h2>' + data + '</h2>')
 			}
 		}
 	}, 2000);

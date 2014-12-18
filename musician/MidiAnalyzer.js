@@ -1,4 +1,12 @@
 var midi = require('midi');
+var ipc = require('ipc');
+var events = require('events');
+
+var eventEmitter = new events.EventEmitter();
+
+exports.midiEmitter = function () {
+    return eventEmitter;
+};
 
 // Set up a new input.
 var input = new midi.input();
@@ -94,6 +102,12 @@ input.on('message', function(deltaTime, message) {
             musician1_history.pop();
         }
         musician1_history.unshift({'note': note, 'time': timestamp});
+    
+        eventEmitter.emit('musician-1-midi', {
+          "mode": mode,
+          "note": note,
+          "velocity": vel,
+        });
 
     } else {
         utils.log("Musician 2 input: " + note + " at " + timestamp);
@@ -102,6 +116,13 @@ input.on('message', function(deltaTime, message) {
             musician2_history.pop();
         }
         musician2_history.unshift({'note': note, 'time': timestamp});
+
+        eventEmitter.emit('musician-2-midi', {
+          "mode": mode,
+          "note": note,
+          "velocity": vel,
+        });
+
     }
 });
 
