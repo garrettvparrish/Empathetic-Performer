@@ -70,36 +70,12 @@ var trigger_vib2 = function (val) {
     update_production('musician-2', 'vib', val);
 }
 
-var trigger_hot1 = function (val) {
-    var h1 = musician_feedback.hot1();
-    if (h1) {
-        h1.start(val * 255);        
+var trigger_heat = function (val) {
+    var heat = musician_feedback.heat();
+    if (heat) {
+        heat.start(val * 255);        
     }
     update_production('musician-1', 'hot', val);
-}
-
-var trigger_hot2 = function (val) {
-    var h2 = musician_feedback.hot2();
-    if (h2) {
-        h2.start(val * 255);        
-    }
-    update_production('musician-2', 'hot', val);
-}
-
-var trigger_cold1 = function (val) {
-    var c1 = musician_feedback.cold1();
-    if (c1) {
-        c1.start(val * 255);        
-    }
-    update_production('musician-1', 'cld', val);
-}
-
-var trigger_cold2 = function (val) {
-    var c2 = musician_feedback.cold2();
-    if (c2) {
-        c2.start(val * 255);        
-    }
-    update_production('musician-2', 'cld', val);
 }
 
 /////////////////////////////////////
@@ -142,6 +118,7 @@ wss.on('connection', function(client_socket) {
 
                 trigger_vib1(data);
                 trigger_vib2(data);
+                trigger_heat(data);
 
             } else if (mes == "identify") {
 
@@ -186,11 +163,17 @@ setInterval(function () {
     var d = new Date();
     var t = d.getTime();
 
+    /////////////////////////////////////
+    /////// COLLECTIVE ATTRIBUTES ///////
+    /////////////////////////////////////
+
     // collective attributes
     var rs = midi_analyzer.rythmicSynchronicity(t);
     update_production('collective', 'rs', rs);
 
-    // INDIVIDUAL ATTRIBUTES
+    /////////////////////////////////////
+    /////// INDIVIDUAL ATTRIBUTES ///////
+    /////////////////////////////////////
 
     // Intensity Level
     var il1 = midi_analyzer.intensityLevel(1);
@@ -232,13 +215,15 @@ setInterval(function () {
     // Patterns
 
     // Articulation
+    var a1 = midi_analyzer.articulation(1);
+    if (a1 != 0) {
+        update_production('musician-1', 'a', a1);
+    }    
 
-    
-    // update_production('collective', 'ms', 0);
-    // update_production('collective', 'trust', 0);
-    // update_production('collective', 'empathy', 0);
-    // update_production('collective', 'rc', 0);
-    // update_production('collective', 'hc', 0);
+    var a2 = midi_analyzer.articulation(2);
+    if (a1 != 0) {
+        update_production('musician-2', 'a', a2);
+    }
 
 }, 100)
 

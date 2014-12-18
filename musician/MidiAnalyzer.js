@@ -35,6 +35,47 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var HISTORY_TIME = 5000;
 
+exports.articulation = function (musician) {
+    var history = (musician == 1) ? musician1_history : musician2_history;
+    
+    var WINDOW_SIZE = 20;
+    var sum = 0;
+    var max_duration = 0.0;
+    var min_duration = 0.0;
+
+    if (history) {
+        if (history.length > WINDOW_SIZE) {
+            for (var i = history.length - 1; i > 0; i--) {
+                var found = false;
+                var note = history[i];
+                if (note.action == 'on') {
+                    for (var j = i - 1; j > 0; j--) {
+                        var note_to_check = history[j];
+                        if (note_to_check.action == 'off') {
+                            if (note_to_check.note_letter == note.note_letter && !found) {
+                                var duration = note_to_check.timestamp - note.timestamp;                            
+
+                                // keep a running max/min for normalizing
+                                if (duration > max_duration) {
+                                    max_duration = duration;
+                                } else if (duration < min_duration) {
+                                    min_duration = duration;                                    
+                                }
+                                sum += duration;
+                                found = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    var normalized =
+
+    return 0.0;
+}
+
 exports.harmonicBusiness = function (musician) {
     var history = (musician == 1) ? musician1_history : musician2_history;
     

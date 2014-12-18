@@ -11,7 +11,7 @@ exports.biometricFeedbackEmitter = function () {
 biometricFeedback = new arduino.Board();
 
 // Variables
-var cold2, hot2, cold1, hot1, vib1, vib2;
+var heat, vib1, vib2;
 
 exports.setVibes = function (i) {
 	if (vib1) {
@@ -22,38 +22,13 @@ exports.setVibes = function (i) {
 		vib2.start(i * 255);
 	}
 
-	if (cold1) {
-		cold1.start(i * 255);
+	if (heat) {
+		heat.start(i * 255);		
 	}
-
-	if (cold2) {
-		cold2.start(i * 255);		
-	}
-
-	if (hot1) {
-		hot1.start(i * 255);
-	}
-
-	if (hot2) {
-		hot2.start(i * 255);		
-	}
-
 }
 
-exports.cold2 = function () {
-	return cold2;
-}
-
-exports.hot2 = function () {
-	return hot2;
-}
-
-exports.cold1 = function () {
-	return cold1;
-}
-
-exports.hot1 = function () {
-	return hot1;
+exports.heat = function () {
+	return heat;
 }
 
 exports.vib1 = function () {
@@ -70,23 +45,9 @@ biometricFeedback.on("ready", function() {
 		eventEmitter.emit('status', {'status':true});
 	}, 1000);
 
-	cold1 = new arduino.Motor({
+	heat = new arduino.Motor({
 		pin: 13
 	});
-
-	hot1 = new arduino.Motor({
-		pin: 12
-	});
-
-
-	cold2 = new arduino.Motor({
-		pin: 9
-	});
-
-	hot2 = new arduino.Motor({
-		pin: 8
-	});
-
 
 	vib1 = new arduino.Motor({
 		pin: 3
