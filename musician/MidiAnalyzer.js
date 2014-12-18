@@ -107,6 +107,7 @@ input.on('message', function(deltaTime, message) {
           "mode": mode,
           "note": note,
           "velocity": vel,
+          "timestamp": timestamp
         });
 
     } else {
@@ -121,6 +122,7 @@ input.on('message', function(deltaTime, message) {
           "mode": mode,
           "note": note,
           "velocity": vel,
+          "timestamp": timestamp
         });
 
     }

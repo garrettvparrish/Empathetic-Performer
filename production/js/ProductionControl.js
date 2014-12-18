@@ -127,7 +127,8 @@ $(function () {
 
 	myLayout.registerComponent( 'Empathetic Performer', function( container, state ){
 		var el = container.getElement();
-		el.html( '<h2>' + state.text + '</h2>');
+		container.height = 20;
+		el.html('<h2>' + state.text + '</h2>');
 	});
 
 	// Collective Attributes
@@ -244,9 +245,9 @@ $(function () {
 			} else if ( message == 'collective-hc') {
 				HC.html('<h2>' + data + '</h2>')
 			} else if (message == 'musician-1-midi') {
-				M1.html('<h2>' + data + '</h2>')
+				M1.html('<h2>' + JSON.stringify(data) + '</h2>')
 			} else if (message == 'musician-2-midi') {
-				M2.html('<h2>' + data + '</h2>')
+				M2.html('<h2>' + JSON.stringify(data) + '</h2>')
 			}
 		}
 	}, 2000);
