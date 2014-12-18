@@ -1,18 +1,20 @@
+echo '[Empathetic Performer - Build] Quitting chrome if open.';
 osascript -e 'quit app "CHROME"';
 sleep 1;
 echo '------------------------------';
 
-echo 'Opening Production Control.';
+echo '[Empathetic Performer - Build] Compiling soy templates';
 echo '------------------------------';
-cd production; open ProductionControl.html; cd ..;
+cd production/soy; java -jar SoyToJsSrcCompiler.jar --outputPathFormat '{INPUT_FILE_NAME_NO_EXT}.js' --srcs templates.soy;
 
-echo 'Opening Audience Visuals.'
+echo '[Empathetic Performer - Build] Opening Production Control.';
+echo '------------------------------';
+cd ..; open ProductionControl.html; cd ..;
+
+echo '[Empathetic Performer - Build] Opening Audience Visuals.'
 echo '------------------------------';
 cd audience; open http://localhost:8888/;
 
-# open http://www.websocket.org/echo.html;
-# open http://whatismyipaddress.com/;
-
-echo 'Starting Empathetic Performer.';
+echo '[Empathetic Performer - Build] Starting Empathetic Performer.';
 echo '------------------------------';
 cd ..; node EmpatheticPerformer.js;

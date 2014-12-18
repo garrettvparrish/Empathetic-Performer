@@ -138,8 +138,6 @@ input.on('message', function(deltaTime, message) {
       "timestamp": timestamp
     };
 
-    utils.log(message);
-
     eventEmitter.emit(key, message);
 
 });

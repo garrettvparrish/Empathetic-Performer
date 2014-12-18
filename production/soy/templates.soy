@@ -1,0 +1,28 @@
+{namespace templates}
+
+/**
+ * Import Header
+ * @param history
+ */
+{template .musician}
+	<table style="width:100%">
+
+		{foreach $note in $history}
+		  <tr>
+		    <td class="label">Mode</td>
+		    <td class="value">{$note.mode}</td> 
+		    <td class="label">Note Number</td>
+		    <td class="value">{$note.note_num}</td> 
+		    <td class="label">Octave Number</td>
+		    <td class="value">{$note.octave}</td> 
+		    <td class="label">Velocity</td>
+		    <td class="value">{$note.velocity}</td>
+		    <td class="label">Action</td>
+		    <td class="value">{$note.action}</td>
+		    <td class="label">Time Stamp</td>
+		    <td class="value">{$note.timestamp}</td>
+		  </tr>
+		{/foreach}
+	</table>
+
+{/template} 

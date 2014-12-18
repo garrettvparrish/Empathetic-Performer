@@ -169,12 +169,14 @@ $(function () {
 	});
 
 	var M1;
+	var M1_history = [];
 	myLayout.registerComponent( 'Musician 1', function( container, state ){
 	    M1 = container.getElement();
 	    M1.html( '<h2>' + state.text + '</h2>');
 	});
 
 	var M2;
+	var M2_history = [];
 	myLayout.registerComponent( 'Musician 2', function( container, state ){
 		M2 = container.getElement();
 		M2.html( '<h2>' + state.text + '</h2>');
@@ -248,19 +250,13 @@ $(function () {
 			} else if ( message == 'collective-hc') {
 				HC.html(encloseIn('h2', data))
 			} else if (message.indexOf("musician") > -1) {
-				console.log("HI");
-				var EL = (message.charAt(9) == "1") ? M1 : M2;
-			    var mode = encloseIn('h2', "Mode: " + data["mode"]);
-				var note_num = encloseIn('h2', "Note Number: " + data["note_num"]);
-				var octave = encloseIn('h2', "Octave: " + data["octave"]);
-				var desc = encloseIn('h2', "Desc: "+ data["desc"]);
-				var velocity = encloseIn('h2', "Velocity: " + data["velocity"]);
-				var action = encloseIn('h2', "Action: " + data["action"]);
-				var time = encloseIn('h2', "Time: " + data["timestamp"]);
-				EL.html(mode + note_num + octave + desc + velocity + action + time);
+				var m1 = (message.charAt(9) == "1");
+				var EL = m1 ? M1 : M2;
+				var history = m1 ? M1_history : M2_history;
+				history.unshift(data);
+				console.log(history);
+				EL.html(templates.musician({history: history}));
 			}
-
-
 		}
 	}, 2000);
 
