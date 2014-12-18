@@ -229,7 +229,6 @@ $(function () {
 			uuid = obj['id'];
 			var message = obj['message'];
 			var data = obj['data'];
-			console.log(message);
 
 			// New connection
 			if (message == 'connection') {
@@ -277,15 +276,17 @@ $(function () {
 		syncButton.bind("mouseup", function (event){
 			if (!sync) {
 				syncButton.css('background-color', 'green');
+				var water = document.getElementById("water");
+				console.log(water);
+				water.play();
 			} else {
 				syncButton.css('background-color', 'red');
+				$("#water").stop();
 			}
 			sync = !sync;
 		});
 
 	}, 2000);
-
-
 
 	////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////
