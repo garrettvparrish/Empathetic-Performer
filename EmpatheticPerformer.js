@@ -51,6 +51,62 @@ var send_to_audience = function (mes, d) {
     send_to_id(mes, audience, d);
 }
 
+/////////////////////////////////////
+///////// Update Functions //////////
+/////////////////////////////////////
+
+var trigger_vib1 = function (val) {
+    var v1 = musician_feedback.vib1();
+    if (v1) {
+        v1.start(val * 255);        
+    }
+    update_production('musician-1', 'vib', val);
+}
+
+var trigger_vib2 = function (val) {
+    var v2 = musician_feedback.vib2();
+    if (v2) {
+        v2.start(val * 255);        
+    }
+    update_production('musician-2', 'vib', val);
+}
+
+var trigger_hot1 = function (val) {
+    var h1 = musician_feedback.hot1();
+    if (h1) {
+        h1.start(val * 255);        
+    }
+    update_production('musician-1', 'hot', val);
+}
+
+var trigger_hot2 = function (val) {
+    var h2 = musician_feedback.hot2();
+    if (h2) {
+        h2.start(val * 255);        
+    }
+    update_production('musician-2', 'hot', val);
+}
+
+var trigger_cold1 = function (val) {
+    var c1 = musician_feedback.cold1();
+    if (c1) {
+        c1.start(val * 255);        
+    }
+    update_production('musician-1', 'cld', val);
+}
+
+var trigger_cold2 = function (val) {
+    var c2 = musician_feedback.cold2();
+    if (c2) {
+        c2.start(val * 255);        
+    }
+    update_production('musician-2', 'cld', val);
+}
+
+/////////////////////////////////////
+/////// WEB SOCKET HANDLERS /////////
+/////////////////////////////////////
+
 // Server connection
 wss.on('connection', function(client_socket) {
 
@@ -86,24 +142,8 @@ wss.on('connection', function(client_socket) {
                 utils.log("Audio Data: " + data);                
                 send_to_all("audio-amp", data);
 
-                // Vibrate the feedback to musicians in correspondence
-                // with the amplitude of the incoming signal                
-                // Musician feeback 
-                var v1 = musician_feedback.vib1();
-                var v2 = musician_feedback.vib2();
-                var h1 = musician_feedback.hot1();
-                var h2 = musician_feedback.hot2();
-                var c1 = musician_feedback.cold1();
-                var c2 = musician_feedback.cold2();
-
-                if (v1 && v2 & h1 & h2 & c1 & c2) {
-                    v1.start(data * 255);
-                    v2.start(data * 255);
-                    h1.start(data * 255);
-                    h2.start(data * 255);
-                    c1.start(data * 255);
-                    c2.start(data * 255);                    
-                }
+                trigger_vib1(data);
+                trigger_vib2(data);
 
             } else if (mes == "identify") {
 
@@ -148,8 +188,7 @@ setInterval(function () {
     var d = new Date();
     var t = d.getTime();
     var rs = midi_analyzer.rythmicSynchronicity(t);
-    // utils.log("RS: " + rs);
-    // update_production('collective', 'rs', rs);
+    update_production('collective', 'rs', rs);
     // update_production('collective', 'ms', 0);
     // update_production('collective', 'trust', 0);
     // update_production('collective', 'empathy', 0);

@@ -172,14 +172,14 @@ $(function () {
 	var M1_history = [];
 	myLayout.registerComponent( 'Musician 1', function( container, state ){
 	    M1 = container.getElement();
-	    M1.html( '<h2>' + state.text + '</h2>');
+	    M1.html(templates.musician({history: [], number: 1}));
 	});
 
 	var M2;
 	var M2_history = [];
 	myLayout.registerComponent( 'Musician 2', function( container, state ){
 		M2 = container.getElement();
-		M2.html( '<h2>' + state.text + '</h2>');
+	    M2.html(templates.musician({history: [], number: 2}));
 	});
 
 	var AUDIENCE;
@@ -191,6 +191,18 @@ $(function () {
 	myLayout.init();
 
 	var sync = false;
+
+	function rgbToHex(R, G, B){ return toHex(R) + toHex(G) + toHex(B); }
+
+	function toHex(n){
+	    n = parseInt(n, 10);
+	    if( isNaN(n) ){ 
+	        return "00";
+	    }
+	    n = Math.max(0, Math.min(n,255));
+	    return "0123456789ABCDEF".charAt((n - n % 16) / 16) + "0123456789ABCDEF".charAt(n % 16);
+	}
+
 
 	////////////////////////////////////////////////////////
 	///////////////////// Playing Audio ////////////////////
@@ -238,28 +250,48 @@ $(function () {
 
 			// Updating UI
 			} else if ( message == 'collective-rs') {
-				RS.html(encloseIn('h2', data))
+				// RS.html(encloseIn('h2', data))
 			} else if (message == 'collective-ms') {	
-				MS.html(encloseIn('h2', data))						
+				// MS.html(encloseIn('h2', data))						
 			} else if ( message == 'collective-trust') {
-				TRUST.html(encloseIn('h2', data))
+				// TRUST.html(encloseIn('h2', data))
 			} else if ( message == 'collective-empathy') {
-				EMPATHY.html(encloseIn('h2', data))
+				// EMPATHY.html(encloseIn('h2', data))
 			} else if ( message == 'collective-rc') {
-				RC.html(encloseIn('h2', data))
+				// RC.html(encloseIn('h2', data))
 			} else if ( message == 'collective-hc') {
-				HC.html(encloseIn('h2', data))
+				// HC.html(encloseIn('h2', data))
 			} else if (message.indexOf("musician") > -1) {
 				var m1 = (message.charAt(9) == "1");
 				var EL = m1 ? M1 : M2;
 				var history = m1 ? M1_history : M2_history;
 				var number = m1 ? 1 : 2;
 
-		        if (history.length >= MUSICIAN_NOTE_HISTORY_SIZE) {
-		            history.pop();
-		        }
-				history.unshift(data);
-				EL.html(templates.musician({history: history, number: number}));
+				if (message.indexOf("midi") > -1) {
+
+			        if (history.length >= MUSICIAN_NOTE_HISTORY_SIZE) {
+			            history.pop();
+			        }
+					history.unshift(data);
+					EL.html(templates.musician({history: history, number: number}));					
+
+				// Musician feedback updates
+				} else {
+					var m1 = (message.charAt(9) == "1");
+					var type = message.substring(11, 14);
+					if (type == 'vib') {
+						var id = '#feedback-m' + number + '-vib';
+						console.log(data);
+					  	$(id).css('background-color', '#' + rgbToHex(0, data * 255, 0));
+					} else if (type == 'hot') {
+						var id = '#feedback-m' + number + '-hot';
+					  	$(id).css('background-color', '#' + rgbToHex(data * 255, 0, 0));
+					} else if (type == 'cld') {
+						var id = '#feedback-m' + number + '-cold';
+					  	$(id).css('background-color', '#' + rgbToHex(0, 0, data * 255));
+					}
+				}
+
 			} else if (message == 'status-midi') {
 			  	$("#midi").css('background-color', 'green');
 			} else if (message == 'status-biometric') {
@@ -279,6 +311,10 @@ $(function () {
 				var water = document.getElementById("water");
 				console.log(water);
 				water.play();
+				water.addEventListener('ended', function () {
+					syncButton.css('background-color', 'red');
+					sync = !sync;
+				});
 			} else {
 				syncButton.css('background-color', 'red');
 				$("#water").stop();

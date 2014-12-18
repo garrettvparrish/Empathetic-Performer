@@ -37,7 +37,6 @@ h1 {
 	background-color: blue;
 }
 
-
 #feedback-m2-hot {
 	background-color: orange;	
 }
@@ -46,7 +45,6 @@ h1 {
 	background-color: yellow;
 }
 
-
 #feedback-m2-cold {
 	background-color: blue;	
 }
@@ -54,6 +52,11 @@ h1 {
 .feedback {
 	width: 205px;
 	height: 50px;
+}
+
+.musician-history {
+	height: 180px;
+	width: 100%;
 }
 
 .status {

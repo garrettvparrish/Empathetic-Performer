@@ -5,7 +5,7 @@ if (typeof templates == 'undefined') { var templates = {}; }
 
 
 templates.musician = function(opt_data, opt_ignored) {
-  var output = '\t<table style="width:100%">';
+  var output = '\t<table class="musician-history" style="width:100%">';
   var noteList4 = opt_data.history;
   var noteListLen4 = noteList4.length;
   for (var noteIndex4 = 0; noteIndex4 < noteListLen4; noteIndex4++) {
