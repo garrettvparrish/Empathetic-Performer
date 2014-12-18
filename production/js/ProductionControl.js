@@ -23,6 +23,7 @@ $(function () {
 			},
 			{
 			    type: 'row',
+			    height: 15,
 			    content: [
 			    	{
 			    		type: 'column',
@@ -93,18 +94,17 @@ $(function () {
 			},
 			{
 			    type: 'row',
+			    height: 40,
 			    content: [
 			    	{
 				        type:'component',
 				        componentName: 'Musician 1',
 				        componentState: { text: 'Musician 1' },
-		                isClosable: false
 			    	},
 			        {
 				        type:'component',
 				        componentName: 'Musician 2',
 				        componentState: { text: 'Musician 2' },
-		                isClosable: false
 				    }
 			  	]
 			  },
@@ -219,6 +219,10 @@ $(function () {
 			console.log("Socket connection opened.");
 		};
 
+		var encloseIn = function (type, m) {
+			return '<' + type + '>' + m + '</' + type + '>';
+		}
+
 		synchronizationSocket.onmessage = function (event) {
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
@@ -232,25 +236,31 @@ $(function () {
 
 			// Updating UI
 			} else if ( message == 'collective-rs') {
-				RS.html('<h2>' + data + '</h2>')
+				RS.html(encloseIn('h2', data))
 			} else if (message == 'collective-ms') {	
-				MS.html('<h2>' + data + '</h2>')						
+				MS.html(encloseIn('h2', data))						
 			} else if ( message == 'collective-trust') {
-				TRUST.html('<h2>' + data + '</h2>')
+				TRUST.html(encloseIn('h2', data))
 			} else if ( message == 'collective-empathy') {
-				EMPATHY.html('<h2>' + data + '</h2>')
+				EMPATHY.html(encloseIn('h2', data))
 			} else if ( message == 'collective-rc') {
-				RC.html('<h2>' + data + '</h2>')
+				RC.html(encloseIn('h2', data))
 			} else if ( message == 'collective-hc') {
-				HC.html('<h2>' + data + '</h2>')
-			} else if (message == 'musician-1-midi') {
-				M1.html('<h2 id="m1midi">' + JSON.stringify(data) + '</h2>')
-				var mode = "<h2>" + data['mode'] + "</h2>";
-				var note = 
-				console.log(M1.html().getElementById("m1midi"));
-			} else if (message == 'musician-2-midi') {
-				M2.html('<h2 id="m2midi">' + JSON.stringify(data) + '</h2>')
+				HC.html(encloseIn('h2', data))
+			} else if (message.indexOf("musician") > -1) {
+				console.log("HI");
+				var EL = (message.charAt(9) == "1") ? M1 : M2;
+			    var mode = encloseIn('h2', "Mode: " + data["mode"]);
+				var note_num = encloseIn('h2', "Note Number: " + data["note_num"]);
+				var octave = encloseIn('h2', "Octave: " + data["octave"]);
+				var desc = encloseIn('h2', "Desc: "+ data["desc"]);
+				var velocity = encloseIn('h2', "Velocity: " + data["velocity"]);
+				var action = encloseIn('h2', "Action: " + data["action"]);
+				var time = encloseIn('h2', "Time: " + data["timestamp"]);
+				EL.html(mode + note_num + octave + desc + velocity + action + time);
 			}
+
+
 		}
 	}, 2000);
 
