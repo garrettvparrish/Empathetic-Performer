@@ -35,17 +35,46 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var HISTORY_TIME = 5000;
 
-exports.intensityLevel = function (musician) {
+exports.harmonicBusiness = function (musician) {
     var history = (musician == 1) ? musician1_history : musician2_history;
+    
+    // filter out only the 'on' hits
+    var on_history = history.filter(function (note) {
+        return note.action == 'on';
+    });
 
     var WINDOW_SIZE = 20;
     var sum = 0;
-    if (history.length > WINDOW_SIZE) {
-        for (var i = 1; i < WINDOW_SIZE; i++) {
-            var note = history[i];
-            if (note.action == 'on') {
-                var vel = note.velocity - 40;
-                sum += math.max(0, vel);
+    if (on_history) {
+        if (on_history.length > WINDOW_SIZE) {
+            for (var i = 1; i < WINDOW_SIZE; i++) {
+                var n1 = on_history[i];
+                var n2 = on_history[i - 1];
+                var diff = math.abs(n1.note_num - n2.note_num);
+                sum += diff;                
+            }
+        }
+    }
+
+    // 35.0 is the range of velocities
+    var range = 35.0;
+    var hb = math.max(0.0, math.min(1.0, sum / (range * WINDOW_SIZE) * 2.0));
+    return hb;
+}
+
+exports.intensityLevel = function (musician) {
+    var history = (musician == 1) ? musician1_history : musician2_history;
+
+    var WINDOW_SIZE = 10;
+    var sum = 0;
+    if (history) {    
+        if (history.length > WINDOW_SIZE) {
+            for (var i = 0; i < WINDOW_SIZE; i++) {
+                var note = history[i];
+                if (note.action == 'on') {
+                    var vel = note.velocity - 40;
+                    sum += math.max(0, vel);
+                }
             }
         }
     }
@@ -61,12 +90,14 @@ exports.rhythmicBusiness = function (musician) {
     // How many notes to compare against
     var WINDOW_SIZE = 10;
     var sum = 0;
-    if (history.length > WINDOW_SIZE) {
-        for (var i = 1; i < WINDOW_SIZE; i++) {
-            var n1 = history[i];
-            var n2 = history[i - 1];
-            var difference = n2.timestamp - n1.timestamp;
-            sum += difference; 
+    if (history) {
+        if (history.length > WINDOW_SIZE) {
+            for (var i = 1; i < WINDOW_SIZE; i++) {
+                var n1 = history[i];
+                var n2 = history[i - 1];
+                var difference = n2.timestamp - n1.timestamp;
+                sum += difference; 
+            }
         }
     }
     // 500 is an empirically determined value
@@ -168,10 +199,12 @@ input.on('message', function(deltaTime, message) {
       "timestamp": timestamp
     };
 
-    if (history.length >= HISTORY_SIZE) {
-        history.pop();
+    if (history) {
+        if (history.length >= HISTORY_SIZE) {
+            history.pop();
+        }
+        history.unshift(message);        
     }
-    history.unshift(message);
 
     eventEmitter.emit(key, message);
 });

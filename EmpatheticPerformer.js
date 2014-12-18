@@ -190,26 +190,42 @@ setInterval(function () {
     var rs = midi_analyzer.rythmicSynchronicity(t);
     update_production('collective', 'rs', rs);
 
-
     // INDIVIDUAL ATTRIBUTES
 
     // Intensity Level
     var il1 = midi_analyzer.intensityLevel(1);
-    update_production('musician-1', 'il', il1);
+    if (il1 != 0) {
+        update_production('musician-1', 'il', il1);
+    }
     var il2 = midi_analyzer.intensityLevel(2);
-    update_production('musician-2', 'il', il2);
+    if (il2 != 0) {
+        update_production('musician-2', 'il', il2);
+    }
 
     // Intensity Business
 
     // Rhythmic Business
-    var b1 = midi_analyzer.rhythmicBusiness(1);
-    update_production('musician-1', 'rb', b1);
-    var b2 = midi_analyzer.rhythmicBusiness(2);
-    update_production('musician-2', 'rb', b2);
+    var rb1 = midi_analyzer.rhythmicBusiness(1);
+    if (rb1 != 0) {
+        update_production('musician-1', 'rb', rb1);
+    }
+    var rb2 = midi_analyzer.rhythmicBusiness(2);
+    if (rb2 != 0) {
+        update_production('musician-2', 'rb', rb2);
+    }
 
     // Rythmic Variation
 
     // Harmonic Business
+    var hb1 = midi_analyzer.harmonicBusiness(1);
+    if (hb1 != 0) {
+        update_production('musician-1', 'hb', hb1);
+    }
+
+    var hb2 = midi_analyzer.harmonicBusiness(2);
+    if (hb2 != 0) {
+        update_production('musician-2', 'hb', hb2);
+    }
 
     // Harmonic Variation
 

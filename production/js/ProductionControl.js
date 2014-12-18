@@ -297,7 +297,13 @@ $(function () {
 							var id = '#m' + number + '-rhythmic-business';
 						  	$(id).css('height',  data*fullHeight + 'px');
 						}
+					} else if (type == 'hb') {
+						if (data != 0) {
+							var id = '#m' + number + '-melodic-business';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}						
 					}
+
 				}
 
 			} else if (message == 'status-midi') {
