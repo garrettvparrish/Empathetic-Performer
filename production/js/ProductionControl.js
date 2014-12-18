@@ -190,6 +190,8 @@ $(function () {
 
 	myLayout.init();
 
+	var sync = false;
+
 	////////////////////////////////////////////////////////
 	///////////////////// Playing Audio ////////////////////
 	////////////////////////////////////////////////////////
@@ -205,29 +207,24 @@ $(function () {
 	    $(".showIfNoApi").show();
 	}
 
-
 	// Web socket connections
 	var uuid = "";
-	var synchronizationSocket;
+	var productionControlSocket;
 
 	var send_message = function (key, d) {
-		synchronizationSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
+		productionControlSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
 	}
 
 	var MUSICIAN_NOTE_HISTORY_SIZE = 8;
 
 	setTimeout(function () {
-		synchronizationSocket = new WebSocket("ws://localhost:3000", "protocolOne");
+		productionControlSocket = new WebSocket("ws://localhost:3000", "protocolOne");
 		
-		synchronizationSocket.onopen = function (event) {
+		productionControlSocket.onopen = function (event) {
 			console.log("Socket connection opened.");
 		};
 
-		var encloseIn = function (type, m) {
-			return '<' + type + '>' + m + '</' + type + '>';
-		}
-
-		synchronizationSocket.onmessage = function (event) {
+		productionControlSocket.onmessage = function (event) {
 			var obj = JSON.parse(event.data);
 			uuid = obj['id'];
 			var message = obj['message'];
@@ -237,7 +234,7 @@ $(function () {
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
-			  	synchronizationSocket.send(JSON.stringify(res)); 
+			  	productionControlSocket.send(JSON.stringify(res)); 
 			  	$("#production").css('background-color', 'green');
 
 			// Updating UI
@@ -272,7 +269,23 @@ $(function () {
 			  	$("#audience").css('background-color', 'green');				
 			}
 		}
+
+		var syncButton = $("#sync");
+		syncButton.bind("mousedown", function (event){
+			syncButton.css('background-color', '#505050');
+		});
+		syncButton.bind("mouseup", function (event){
+			if (!sync) {
+				syncButton.css('background-color', 'green');
+			} else {
+				syncButton.css('background-color', 'red');
+			}
+			sync = !sync;
+		});
+
 	}, 2000);
+
+
 
 	////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////
