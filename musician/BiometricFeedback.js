@@ -1,5 +1,12 @@
 var arduino = require("johnny-five");
 
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+
+exports.biometricFeedbackEmitter = function () {
+    return eventEmitter;
+};
+
 // Musician Feedback Control
 biometricFeedback = new arduino.Board();
 
@@ -59,7 +66,10 @@ exports.vib2 = function () {
 
 // audience control
 biometricFeedback.on("ready", function() {
-	
+	setTimeout(function () {
+		eventEmitter.emit('status', {'status':true});
+	}, 1000);
+
 	cold1 = new arduino.Motor({
 		pin: 13
 	});
@@ -86,13 +96,4 @@ biometricFeedback.on("ready", function() {
 		pin: 5
 	});
 
-	console.log("Starting hot 1");
-
-	// cold2.start(255);
-	hot2.start(255);
-
 });
-
-
-
-

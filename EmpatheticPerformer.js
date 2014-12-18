@@ -28,6 +28,7 @@ var audience_uuid = "";
 ///////////////////////////////
 
 var update_production = function (section, key, val) {
+    console.log(section + '-' + key);
     if (production_socket) {
         production_socket.send(JSON.stringify({message:section+'-'+key, data:val}))        
     }
@@ -116,10 +117,9 @@ wss.on('connection', function(client_socket) {
                     m2_uuid = identifier;
 
                 } else if (data == 'audience') {
-                    console.log("AUDIENCE CONNECTED");
                     setTimeout(function () {
                         update_production('status', 'audience', {data: true});
-                    }, 1000);
+                    }, 3000);
                 }
 
             // de-identifying a participant in some way
@@ -150,12 +150,12 @@ setInterval(function () {
     var t = d.getTime();
     var rs = midi_analyzer.rythmicSynchronicity(t);
     // utils.log("RS: " + rs);
-    update_production('collective', 'rs', rs);
-    update_production('collective', 'ms', 0);
-    update_production('collective', 'trust', 0);
-    update_production('collective', 'empathy', 0);
-    update_production('collective', 'rc', 0);
-    update_production('collective', 'hc', 0);
+    // update_production('collective', 'rs', rs);
+    // update_production('collective', 'ms', 0);
+    // update_production('collective', 'trust', 0);
+    // update_production('collective', 'empathy', 0);
+    // update_production('collective', 'rc', 0);
+    // update_production('collective', 'hc', 0);
 
 }, 100)
 
@@ -172,3 +172,8 @@ midi.on('midi-status', function (data) {
     update_production('status', 'midi', data);
 });
 
+var biometric = musician_feedback.biometricFeedbackEmitter();
+biometric.on('status', function (data) {
+    console.log("STATUS");
+    update_production('status', 'biometric', '');
+})

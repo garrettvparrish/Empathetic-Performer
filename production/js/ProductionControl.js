@@ -232,7 +232,7 @@ $(function () {
 			uuid = obj['id'];
 			var message = obj['message'];
 			var data = obj['data'];
-
+			console.log(message);
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};

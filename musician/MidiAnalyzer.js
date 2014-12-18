@@ -145,7 +145,6 @@ input.on('message', function(deltaTime, message) {
 input.openPort(0);
 
 setTimeout(function () {
-    console.log("MIDI CONNECTED");
     eventEmitter.emit('midi-status',{'status':numPorts > 0});
 }, 5000);
 
