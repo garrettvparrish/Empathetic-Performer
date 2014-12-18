@@ -21,7 +21,7 @@ var production_control = "";
 var production_socket;
 var m1_uuid = "";
 var m2_uuid = "";
-var audience_members = [];
+var audience_uuid = "";
 
 ///////////////////////////////
 ////// WEB SOCKET SERVER //////
@@ -48,9 +48,7 @@ var send_to_all = function (message, data) {
 }
 
 var send_to_audience = function (mes, d) {
-    for (i in audience_members) {
-        send_to_id(mes, audience_members[i], d);
-    }
+    send_to_id(mes, audience, d);
 }
 
 // Server connection
@@ -118,8 +116,10 @@ wss.on('connection', function(client_socket) {
                     m2_uuid = identifier;
 
                 } else if (data == 'audience') {
-                    audience_members.push(identifier);
-                    utils.log("Current Audience Members: " + audience_members);
+                    console.log("AUDIENCE CONNECTED");
+                    setTimeout(function () {
+                        update_production('status', 'audience', {data: true});
+                    }, 1000);
                 }
 
             // de-identifying a participant in some way
@@ -161,10 +161,14 @@ setInterval(function () {
 
 var midi = midi_analyzer.midiEmitter();
 midi.on('musician-1-midi', function (data) {
-    update_production('musician-1', 'midi', data)
+    update_production('musician-1', 'midi', data);
 });
 
 midi.on('musician-2-midi', function (data) {
-    update_production('musician-2', 'midi', data)
+    update_production('musician-2', 'midi', data);
 })
+
+midi.on('midi-status', function (data) {
+    update_production('status', 'midi', data);
+});
 

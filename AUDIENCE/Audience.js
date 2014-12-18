@@ -16,19 +16,20 @@ $(function () {
 	
 	// Web socket connections
 	var uuid = "";
-	var audienceMemberSocket;
+	var audienceSocket;
 	
-	audienceMemberSocket = new WebSocket("ws://localhost:3000", "protocolOne");
+	audienceSocket = new WebSocket("ws://localhost:3000", "protocolOne");
 
 	var send_message = function (key, d) {
-		audienceMemberSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
+		audienceSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
 	}
 	
-	audienceMemberSocket.onopen = function (event) {
+	audienceSocket.onopen = function (event) {
 		console.log("Socket connection opened.");
+		// audienceSocket.send(JSON.stringify({message: }))
 	};
 
-	audienceMemberSocket.onmessage = function (event) {
+	audienceSocket.onmessage = function (event) {
 
 		var obj = JSON.parse(event.data);
 		var message = obj['message'];
@@ -40,7 +41,7 @@ $(function () {
 			uuid = obj['id'];
 
 			var res = {message: "identify", id: uuid, data: 'audience'};
-		  	audienceMemberSocket.send(JSON.stringify(res)); 
+		  	audienceSocket.send(JSON.stringify(res)); 
 
 		// Play the audio file
 		} 

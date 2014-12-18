@@ -12,7 +12,7 @@ exports.midiEmitter = function () {
 var input = new midi.input();
 
 // Count the available input ports.
-input.getPortCount();
+var numPorts = input.getPortCount();
 
 // Get the name of a specified input port.
 input.getPortName(0);
@@ -142,8 +142,13 @@ input.on('message', function(deltaTime, message) {
 
 });
 
-// Open the first available input port.
 input.openPort(0);
+
+setTimeout(function () {
+    console.log("MIDI CONNECTED");
+    eventEmitter.emit('midi-status',{'status':numPorts > 0});
+}, 5000);
+
 
 // Sysex, timing, and active sensing messages are ignored
 // by default. To enable these message types, pass false for

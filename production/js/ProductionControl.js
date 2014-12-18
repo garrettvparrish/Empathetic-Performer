@@ -16,8 +16,8 @@ $(function () {
 				        componentName: 'Empathetic Performer',
 				        componentState: { text: 'Empathetic Performer' },
 		                isClosable: false,
-		                height: 20,
-		                title: "Empathetic Performer"
+		                height: 25,
+		                title: "System Status"
 			    	}
 			  	]
 			},
@@ -237,7 +237,7 @@ $(function () {
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
 			  	synchronizationSocket.send(JSON.stringify(res)); 
-
+			  	$("#production").css('background-color', 'green');
 			// Updating UI
 			} else if ( message == 'collective-rs') {
 				RS.html(encloseIn('h2', data))
@@ -261,6 +261,12 @@ $(function () {
 		        }
 				history.unshift(data);
 				EL.html(templates.musician({history: history}));
+			} else if (message == 'status-midi') {
+			  	$("#midi").css('background-color', 'green');
+			} else if (message == 'status-biometric') {
+			  	$("#biometric").css('background-color', 'green');
+			} else if (message == 'status-audience') {
+			  	$("#audience").css('background-color', 'green');				
 			}
 		}
 	}, 2000);
