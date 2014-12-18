@@ -1,3 +1,4 @@
+echo '------------------------------';
 echo '[Empathetic Performer - Build] Quitting chrome if open.';
 osascript -e 'quit app "CHROME"';
 sleep 1;

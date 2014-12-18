@@ -138,11 +138,11 @@ wss.on('connection', function(client_socket) {
                 send_to_all("start-sync", ""); 
 
             } else if (mes == "sync-amp") {
+
                 send_to_all("audio-amp", data);
 
                 trigger_vib1(data);
                 trigger_vib2(data);
-
 
             } else if (mes == "identify") {
 
@@ -186,8 +186,17 @@ wss.on('connection', function(client_socket) {
 setInterval(function () {
     var d = new Date();
     var t = d.getTime();
+
+    // collective attributes
     var rs = midi_analyzer.rythmicSynchronicity(t);
     update_production('collective', 'rs', rs);
+
+    // individual attributes
+    var b1 = midi_analyzer.business(1);
+    update_production('musician-1', 'b', b1);
+    var b2 = midi_analyzer.business(2);
+    update_production('musician-2', 'b', b2);
+    
     // update_production('collective', 'ms', 0);
     // update_production('collective', 'trust', 0);
     // update_production('collective', 'empathy', 0);

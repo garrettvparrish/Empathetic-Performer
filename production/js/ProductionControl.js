@@ -94,7 +94,7 @@ $(function () {
 			},
 			{
 			    type: 'row',
-			    height: 40,
+			    height: 60,
 			    content: [
 			    	{
 				        type:'component',
@@ -106,17 +106,6 @@ $(function () {
 				        componentName: 'Musician 2',
 				        componentState: { text: '' },
 				    }
-			  	]
-			  },
-			  {
-			    type: 'row',
-			    content: [
-			    	{
-				        type:'component',
-				        componentName: 'Audience',
-				        componentState: { text: 'Audience' },
-		                isClosable: false
-			    	}
 			  	]
 			  }
 	  	]
@@ -182,12 +171,6 @@ $(function () {
 	    M2.html(templates.musician({history: [], number: 2}));
 	});
 
-	var AUDIENCE;
-	myLayout.registerComponent( 'Audience', function( container, state ){
-  	    AUDIENCE = container.getElement();
-  	    AUDIENCE.html(templates.audience());
-	});
-
 	myLayout.init();
 
 	var sync = false;
@@ -241,15 +224,16 @@ $(function () {
 			uuid = obj['id'];
 			var message = obj['message'];
 			var data = obj['data'];
-
+			console.log(message);
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
 			  	productionControlSocket.send(JSON.stringify(res)); 
 			  	$("#production").css('background-color', 'green');
 
-			// Updating UI
-			} else if ( message == 'collective-rs') {
+			// Collective Attributes
+			} else if (message == "collective-rc") {
+
 				// RS.html(encloseIn('h2', data))
 			} else if (message == 'collective-ms') {	
 				// MS.html(encloseIn('h2', data))						
@@ -261,6 +245,8 @@ $(function () {
 				// RC.html(encloseIn('h2', data))
 			} else if ( message == 'collective-hc') {
 				// HC.html(encloseIn('h2', data))
+
+			// Musician Attributes
 			} else if (message.indexOf("musician") > -1) {
 				var m1 = (message.charAt(9) == "1");
 				var EL = m1 ? M1 : M2;
@@ -278,18 +264,33 @@ $(function () {
 				// Musician feedback updates
 				} else {
 					var m1 = (message.charAt(9) == "1");
-					var type = message.substring(11, 14);
+					var type = message.substring(11, message.length);
+					console.log(type);
+					// Vibration
 					if (type == 'vib') {
 						var id = '#feedback-m' + number + '-vib';
 						console.log(data);
 					  	$(id).css('background-color', '#' + rgbToHex(0, data * 255, 0));
+
+					// Hot
 					} else if (type == 'hot') {
 						var id = '#feedback-m' + number + '-hot';
 					  	$(id).css('background-color', '#' + rgbToHex(data * 255, 0, 0));
+					
+					// Cold
 					} else if (type == 'cld') {
 						var id = '#feedback-m' + number + '-cold';
 					  	$(id).css('background-color', '#' + rgbToHex(0, 0, data * 255));
+
+					// Business
+					} else if (type == 'b') {
+
+					// Rythmic Variation
+					} else if (type == 'rv') {
+
 					}
+
+
 				}
 
 			} else if (message == 'status-midi') {

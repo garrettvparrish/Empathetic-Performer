@@ -33,7 +33,28 @@ var HISTORY_SIZE = 200;
 var BEAT_SIZE = 100;
 
 // how far to look back through history to analyze the similarity
-var WINDOW_SIZE = 5000;
+var HISTORY_TIME = 5000;
+
+exports.business = function (musician) {
+    var history = (musician == 1) ? musician1_history : musician2_history;
+
+    // How many notes to compare against
+    var WINDOW_SIZE = 10;
+    var sum = 0;
+    if (history.length > WINDOW_SIZE) {
+        for (var i = 1; i < WINDOW_SIZE; i++) {
+            var n1 = history[i];
+            var n2 = history[i - 1];
+            var difference = n2['time'] - n1['time'];
+            sum += difference; 
+        }
+    }
+    // 500 is an empirically determined value
+    var rv = sum / (500.0 * WINDOW_SIZE);
+
+    var normalized = 1.0 - math.max(0, math.min(1.0, rv));
+    return rv;
+}
 
 exports.rythmicSynchronicity = function (timestamp) {
 
@@ -43,7 +64,7 @@ exports.rythmicSynchronicity = function (timestamp) {
     var m1_hits = 0;
     var m2_hits = 0;
 
-    while (tracker < WINDOW_SIZE) {
+    while (tracker < HISTORY_TIME) {
         // Top and lower bound through out the past x milliseconds
         var top_bound = timestamp - tracker;
         var bottom_bound = top_bound - BEAT_SIZE; 
@@ -54,8 +75,10 @@ exports.rythmicSynchronicity = function (timestamp) {
 
         musician1_history.forEach(function(beat) {
             if (beat.time < top_bound && beat.time > bottom_bound) {
+
                 m1 = true;
                 m1_hits = m1_hits + 1;
+
             }
         });
 
@@ -111,7 +134,7 @@ input.on('message', function(deltaTime, message) {
         if (musician1_history.length >= HISTORY_SIZE) {
             musician1_history.pop();
         }
-        musician1_history.unshift({'note': note, 'time': timestamp});
+        musician1_history.unshift({'note': note, 'time': timestamp, 'velocity': vel});
         relative_note = note - 60;
         key = "musician-1-midi";
 
@@ -121,7 +144,7 @@ input.on('message', function(deltaTime, message) {
         if (musician2_history.length >= HISTORY_SIZE) {
             musician2_history.pop();
         }
-        musician2_history.unshift({'note': note, 'time': timestamp});
+        musician2_history.unshift({'note': note, 'time': timestamp, 'velocity': vel});
 
         relative_note = note - 24;
         key = "musician-2-midi";
