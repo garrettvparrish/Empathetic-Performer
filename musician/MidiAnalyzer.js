@@ -35,7 +35,27 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var HISTORY_TIME = 5000;
 
-exports.business = function (musician) {
+exports.intensityLevel = function (musician) {
+    var history = (musician == 1) ? musician1_history : musician2_history;
+
+    var WINDOW_SIZE = 20;
+    var sum = 0;
+    if (history.length > WINDOW_SIZE) {
+        for (var i = 1; i < WINDOW_SIZE; i++) {
+            var note = history[i];
+            if (note.action == 'on') {
+                var vel = note.velocity - 40;
+                sum += math.max(0, vel);
+            }
+        }
+    }
+
+    // 127 is the range of velocities
+    var il = math.max(0.0, math.min(1.0, sum / (87.0 * WINDOW_SIZE) * 2.0));
+    return normalized;
+}
+
+exports.rhythmicBusiness = function (musician) {
     var history = (musician == 1) ? musician1_history : musician2_history;
 
     // How many notes to compare against
@@ -45,7 +65,7 @@ exports.business = function (musician) {
         for (var i = 1; i < WINDOW_SIZE; i++) {
             var n1 = history[i];
             var n2 = history[i - 1];
-            var difference = n2['time'] - n1['time'];
+            var difference = n2.timestamp - n1.timestamp;
             sum += difference; 
         }
     }
@@ -53,7 +73,7 @@ exports.business = function (musician) {
     var rv = sum / (500.0 * WINDOW_SIZE);
 
     var normalized = 1.0 - math.max(0, math.min(1.0, rv));
-    return rv;
+    return normalized;
 }
 
 exports.rythmicSynchronicity = function (timestamp) {
@@ -74,7 +94,7 @@ exports.rythmicSynchronicity = function (timestamp) {
         var m2 = false;
 
         musician1_history.forEach(function(beat) {
-            if (beat.time < top_bound && beat.time > bottom_bound) {
+            if (beat.timestamp < top_bound && beat.timestamp > bottom_bound) {
 
                 m1 = true;
                 m1_hits = m1_hits + 1;
@@ -83,7 +103,7 @@ exports.rythmicSynchronicity = function (timestamp) {
         });
 
         musician2_history.forEach(function(beat) {
-            if (beat.time < top_bound && beat.time > bottom_bound) {
+            if (beat.timestamp < top_bound && beat.timestamp > bottom_bound) {
                 m2 = true;
                 m2_hits = m2_hits + 1;
             }
@@ -98,9 +118,6 @@ exports.rythmicSynchronicity = function (timestamp) {
 
     m1_hits = m1_hits/2;
     m2_hits = m2_hits/2;
-
-    // utils.log("Musician 1 hit " + m1_hits + " times in the last 5 seconds.");
-    // utils.log("Musician 2 hit " + m2_hits + " times in the last 5 seconds.");
 
     // Calculates the rythmic syncrony 
     var ratio = collective_hits/(m1_hits + m2_hits);
@@ -128,24 +145,14 @@ input.on('message', function(deltaTime, message) {
     var d = new Date();
     var timestamp = d.getTime();
 
+    var history;
+
     if (note >= 60 && note <= 96) {
-        // utils.log("Musician 1 input: " + note + " at " + timestamp);
-        
-        if (musician1_history.length >= HISTORY_SIZE) {
-            musician1_history.pop();
-        }
-        musician1_history.unshift({'note': note, 'time': timestamp, 'velocity': vel});
+        history = musician1_history;
         relative_note = note - 60;
         key = "musician-1-midi";
-
     } else if (note >= 24 && note < 60) {
-        // utils.log("Musician 2 input: " + note + " at " + timestamp);
-
-        if (musician2_history.length >= HISTORY_SIZE) {
-            musician2_history.pop();
-        }
-        musician2_history.unshift({'note': note, 'time': timestamp, 'velocity': vel});
-
+        history = musician2_history;
         relative_note = note - 24;
         key = "musician-2-midi";
     }
@@ -161,8 +168,12 @@ input.on('message', function(deltaTime, message) {
       "timestamp": timestamp
     };
 
-    eventEmitter.emit(key, message);
+    if (history.length >= HISTORY_SIZE) {
+        history.pop();
+    }
+    history.unshift(message);
 
+    eventEmitter.emit(key, message);
 });
 
 input.openPort(0);

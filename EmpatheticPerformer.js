@@ -11,6 +11,7 @@ utils = require("./lib/utils.js"),
 musician_feedback = require("./musician/BiometricFeedback.js"),
 midi_analyzer = require("./musician/MidiAnalyzer.js");
 
+console.log('HELLO"')
 
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
@@ -191,11 +192,33 @@ setInterval(function () {
     var rs = midi_analyzer.rythmicSynchronicity(t);
     update_production('collective', 'rs', rs);
 
-    // individual attributes
-    var b1 = midi_analyzer.business(1);
-    update_production('musician-1', 'b', b1);
-    var b2 = midi_analyzer.business(2);
-    update_production('musician-2', 'b', b2);
+
+    // INDIVIDUAL ATTRIBUTES
+
+    // Intensity Level
+    var il1 = midi_analyzer.intensityLevel(1);
+    update_production('musician-1', 'il', il1);
+    var il2 = midi_analyzer.intensityLevel(2);
+    update_production('musician-2', 'il', il2);
+
+    // Intensity Business
+
+    // Rhythmic Business
+    var b1 = midi_analyzer.rhythmicBusiness(1);
+    update_production('musician-1', 'rb', b1);
+    var b2 = midi_analyzer.rhythmicBusiness(2);
+    update_production('musician-2', 'rb', b2);
+
+    // Rythmic Variation
+
+    // Harmonic Business
+
+    // Harmonic Variation
+
+    // Patterns
+
+    // Articulation
+
     
     // update_production('collective', 'ms', 0);
     // update_production('collective', 'trust', 0);
