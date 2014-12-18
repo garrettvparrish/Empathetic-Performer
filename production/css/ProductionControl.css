@@ -8,6 +8,23 @@ h1 {
 	color: white;
 }
 
+
+.individual-metric-column {
+	width: 12.5%;
+	text-align: center;
+	h2 {
+		font-size: 5px;
+	}
+}
+
+.individual-metric {
+	height: 100px;
+	width: 80%;
+	padding-left: 5px;
+	padding-right: 5px;
+	background-color: white;
+}
+
 .status-label {
 	color: white;
 	text-align: center;

@@ -52,7 +52,7 @@ exports.intensityLevel = function (musician) {
 
     // 127 is the range of velocities
     var il = math.max(0.0, math.min(1.0, sum / (87.0 * WINDOW_SIZE) * 2.0));
-    return normalized;
+    return il;
 }
 
 exports.rhythmicBusiness = function (musician) {
