@@ -5,14 +5,34 @@ h2 {
 
 h1 {
 	font-family: 'Helvetica';
+	color: white;
 }
 
+.status-label {
+	color: white;
+	text-align: center;
+}
+
+.status {
+
+}
+
+.status-indicator {
+	background-color: red;
+	height: 80px;
+	width: 80px;
+}
+
+
 #title {
+	padding: 0px;
 	font-size: 30px;
+	text-align: center;
 }
 
 #description {
-	font-size: 30px;
+	font-size: 20px;
+	text-align: center;
 }
 
 .value {

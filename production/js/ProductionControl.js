@@ -127,7 +127,7 @@ $(function () {
 
 	myLayout.registerComponent( 'Empathetic Performer', function( container, state ){
 		var el = container.getElement();
-		el.html('<h2>' + state.text + '</h2>');
+		el.html(templates.systemStatus());
 	});
 
 	// Collective Attributes

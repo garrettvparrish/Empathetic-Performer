@@ -32,9 +32,6 @@
  */
 {template .systemStatus}
 	<div style="width:100%">
-		<h1 id="title">
-			Empathetic Performer 
-		</h1>
 		<h1 id="description">
 			System Status 
 		</h1>
@@ -47,13 +44,26 @@
 		    <td class="status-label">Audience Visuals</td> 
 		  </tr>
 		  <tr>
-		    <td class="status" id="biometric"></td>
-		    <td class="status" id="midi"></td> 
-		    <td class="status" id="production"></td>
-		    <td class="status" id="audience"></td> 
+		    <td class="status">
+		    	<center>
+			    	<div class="status-indicator" id="biometric"> </div>
+				</center>
+		    </td>
+		    <td class="status"> 
+		    	<center>
+			    	<div class="status-indicator" id="midi"> </div>
+				</center>
+		    <td class="status">
+		    	<center>
+			    	<div class="status-indicator" id="production"> </div>
+				</center>
+		    </td>
+		    <td class="status">
+		    	<center>
+			    	<div class="status-indicator" id="audience"> </div>
+				</center>
+		    </td>
 		  </tr>
-
-		{/foreach}
 	</table>
 
 {/template} 
