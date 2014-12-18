@@ -28,7 +28,6 @@ var audience_uuid = "";
 ///////////////////////////////
 
 var update_production = function (section, key, val) {
-    console.log(section + '-' + key);
     if (production_socket) {
         production_socket.send(JSON.stringify({message:section+'-'+key, data:val}))        
     }
@@ -159,6 +158,8 @@ setInterval(function () {
 
 }, 100)
 
+// Event emitters from other systems
+
 var midi = midi_analyzer.midiEmitter();
 midi.on('musician-1-midi', function (data) {
     update_production('musician-1', 'midi', data);
@@ -174,6 +175,5 @@ midi.on('midi-status', function (data) {
 
 var biometric = musician_feedback.biometricFeedbackEmitter();
 biometric.on('status', function (data) {
-    console.log("STATUS");
     update_production('status', 'biometric', '');
 })
