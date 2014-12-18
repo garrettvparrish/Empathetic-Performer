@@ -1,7 +1,7 @@
+var math = require('mathjs');
 var midi = require('midi');
 var ipc = require('ipc');
 var events = require('events');
-
 var eventEmitter = new events.EventEmitter();
 
 exports.midiEmitter = function () {
@@ -91,41 +91,57 @@ input.on('message', function(deltaTime, message) {
     var note = parseInt(message[1]);
     var vel = message[2];
 
+    var notes = ["C", "Db", "D", "Eb", "E", "F", "F#", "G","Ab", "A", "Bb", "B"];
+    var note_num = note % 12
+    var note_name = notes[note_num];
+    var octave = math.floor(note/12);
+    octave = octave > 4 ? octave - 4 : octave - 1;
+    var desc = note_name + octave;
+    var action = vel == 0 ? "off" : "on";
+    var relative_note = 0;
+    var key = "";
+
     // in milliseconds
     var d = new Date();
     var timestamp = d.getTime();
 
-    if (note >= 60) {
-        utils.log("Musician 1 input: " + note + " at " + timestamp);
+    if (note >= 60 && note <= 96) {
+        // utils.log("Musician 1 input: " + note + " at " + timestamp);
         
         if (musician1_history.length >= HISTORY_SIZE) {
             musician1_history.pop();
         }
         musician1_history.unshift({'note': note, 'time': timestamp});
-    
-        eventEmitter.emit('musician-1-midi', {
-          "mode": mode,
-          "note": note,
-          "velocity": vel,
-          "timestamp": timestamp
-        });
+        relative_note = note - 60;
+        key = "musician-1-midi";
 
-    } else {
-        utils.log("Musician 2 input: " + note + " at " + timestamp);
+    } else if (note >= 24 && note < 60) {
+        // utils.log("Musician 2 input: " + note + " at " + timestamp);
 
         if (musician2_history.length >= HISTORY_SIZE) {
             musician2_history.pop();
         }
         musician2_history.unshift({'note': note, 'time': timestamp});
 
-        eventEmitter.emit('musician-2-midi', {
-          "mode": mode,
-          "note": note,
-          "velocity": vel,
-          "timestamp": timestamp
-        });
-
+        relative_note = note - 24;
+        key = "musician-2-midi";
     }
+
+    var message = {
+      "mode": mode,
+      "note_num": relative_note,
+      "note_letter" : note_name,
+      "octave" : octave,
+      "desc" : desc,
+      "velocity": vel,
+      "action" : action,
+      "timestamp": timestamp
+    };
+
+    utils.log(message);
+
+    eventEmitter.emit(key, message);
+
 });
 
 // Open the first available input port.

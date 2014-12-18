@@ -127,7 +127,6 @@ $(function () {
 
 	myLayout.registerComponent( 'Empathetic Performer', function( container, state ){
 		var el = container.getElement();
-		container.height = 20;
 		el.html('<h2>' + state.text + '</h2>');
 	});
 
@@ -245,9 +244,12 @@ $(function () {
 			} else if ( message == 'collective-hc') {
 				HC.html('<h2>' + data + '</h2>')
 			} else if (message == 'musician-1-midi') {
-				M1.html('<h2>' + JSON.stringify(data) + '</h2>')
+				M1.html('<h2 id="m1midi">' + JSON.stringify(data) + '</h2>')
+				var mode = "<h2>" + data['mode'] + "</h2>";
+				var note = 
+				console.log(M1.html().getElementById("m1midi"));
 			} else if (message == 'musician-2-midi') {
-				M2.html('<h2>' + JSON.stringify(data) + '</h2>')
+				M2.html('<h2 id="m2midi">' + JSON.stringify(data) + '</h2>')
 			}
 		}
 	}, 2000);
