@@ -3,6 +3,18 @@ h2 {
 	font-size: 15px;
 }
 
+h1 {
+	font-family: 'Helvetica';
+}
+
+#title {
+	font-size: 30px;
+}
+
+#description {
+	font-size: 30px;
+}
+
 .value {
 	color: white;
 };

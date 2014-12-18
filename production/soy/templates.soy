@@ -26,3 +26,35 @@
 	</table>
 
 {/template} 
+
+/**
+ * Import Header
+ */
+{template .systemStatus}
+	<div style="width:100%">
+		<h1 id="title">
+			Empathetic Performer 
+		</h1>
+		<h1 id="description">
+			System Status 
+		</h1>
+	</div>
+	<table style="width:100%">
+		  <tr>
+		    <td class="status-label">Biometric Feedback</td>
+		    <td class="status-label">Midi Keyboard</td> 
+		    <td class="status-label">Production Control</td>
+		    <td class="status-label">Audience Visuals</td> 
+		  </tr>
+		  <tr>
+		    <td class="status" id="biometric"></td>
+		    <td class="status" id="midi"></td> 
+		    <td class="status" id="production"></td>
+		    <td class="status" id="audience"></td> 
+		  </tr>
+
+		{/foreach}
+	</table>
+
+{/template} 
+

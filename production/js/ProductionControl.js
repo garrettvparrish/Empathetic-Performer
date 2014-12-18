@@ -214,6 +214,8 @@ $(function () {
 		synchronizationSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
 	}
 
+	var MUSICIAN_NOTE_HISTORY_SIZE = 13;
+
 	setTimeout(function () {
 		synchronizationSocket = new WebSocket("ws://localhost:3000", "protocolOne");
 		
@@ -253,8 +255,11 @@ $(function () {
 				var m1 = (message.charAt(9) == "1");
 				var EL = m1 ? M1 : M2;
 				var history = m1 ? M1_history : M2_history;
+
+		        if (history.length >= MUSICIAN_NOTE_HISTORY_SIZE) {
+		            history.pop();
+		        }
 				history.unshift(data);
-				console.log(history);
 				EL.html(templates.musician({history: history}));
 			}
 		}
