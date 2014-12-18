@@ -138,12 +138,11 @@ wss.on('connection', function(client_socket) {
                 send_to_all("start-sync", ""); 
 
             } else if (mes == "sync-amp") {
-
-                utils.log("Audio Data: " + data);                
                 send_to_all("audio-amp", data);
 
                 trigger_vib1(data);
                 trigger_vib2(data);
+
 
             } else if (mes == "identify") {
 

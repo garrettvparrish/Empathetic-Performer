@@ -359,6 +359,13 @@ $(function () {
 	var min = 65;
 	var max = 140;
 
+	var history = [];
+	var SMOOTHING_SIZE = 5.0;
+
+	for (var i = 0; i < SMOOTHING_SIZE; i++) {
+		history.push(0.0);
+	}
+
 	// Get the frequency data and update the visualisation
 	function update() {
 	    requestAnimationFrame(update);
@@ -372,6 +379,16 @@ $(function () {
 	    var normalized = ((avg-min)/(max-min)).toFixed(2);
 	    normalized = normalized < 0.0 ? 0.0 : normalized;
 	    normalized = normalized > 1.0 ? 1.0 : normalized;
+
+	    history.pop();
+	    history.unshift(normalized);
+
+	    var sum = 0;
+	    for (var i = 0; i < SMOOTHING_SIZE; i++) {
+			sum += history[i];	    	
+	    }
+
+	    normalized = normalized / SMOOTHING_SIZE * 5.0;
 
 	    // triggered audio data
 	    if (normalized != 0) {
