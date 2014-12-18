@@ -99,12 +99,12 @@ $(function () {
 			    	{
 				        type:'component',
 				        componentName: 'Musician 1',
-				        componentState: { text: 'Musician 1' },
+				        componentState: { text: '' },
 			    	},
 			        {
 				        type:'component',
 				        componentName: 'Musician 2',
-				        componentState: { text: 'Musician 2' },
+				        componentState: { text: '' },
 				    }
 			  	]
 			  },
@@ -185,7 +185,7 @@ $(function () {
 	var AUDIENCE;
 	myLayout.registerComponent( 'Audience', function( container, state ){
   	    AUDIENCE = container.getElement();
-  	    AUDIENCE.html( '<h2>' + state.text + '</h2>');
+  	    AUDIENCE.html(templates.audience());
 	});
 
 	myLayout.init();

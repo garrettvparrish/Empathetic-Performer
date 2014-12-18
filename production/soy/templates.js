@@ -20,3 +20,8 @@ templates.musician = function(opt_data, opt_ignored) {
 templates.systemStatus = function(opt_data, opt_ignored) {
   return '\t<table style="width:100%"><tr><td class="status-label">Biometric Feedback</td><td class="status-label">Midi Keyboard</td><td class="status-label">Production Control</td><td class="status-label">Audience Visuals</td></tr><tr><td class="status"><center><div class="status-indicator" id="biometric"> </div></center></td><td class="status"><center><div class="status-indicator" id="midi"> </div></center><td class="status"><center><div class="status-indicator" id="production" style="background-color: \'green\';"> </div></center></td><td class="status"><center><div class="status-indicator" id="audience"> </div></center></td></tr></table>';
 };
+
+
+templates.audience = function(opt_data, opt_ignored) {
+  return '\t<center><h2>Audience</h2></center>';
+};
