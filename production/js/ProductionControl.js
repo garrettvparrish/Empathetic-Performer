@@ -214,7 +214,7 @@ $(function () {
 		synchronizationSocket.send(JSON.stringify({message: key, id: uuid, data: d}));
 	}
 
-	var MUSICIAN_NOTE_HISTORY_SIZE = 13;
+	var MUSICIAN_NOTE_HISTORY_SIZE = 8;
 
 	setTimeout(function () {
 		synchronizationSocket = new WebSocket("ws://localhost:3000", "protocolOne");
@@ -233,11 +233,13 @@ $(function () {
 			var message = obj['message'];
 			var data = obj['data'];
 			console.log(message);
+
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
 			  	synchronizationSocket.send(JSON.stringify(res)); 
 			  	$("#production").css('background-color', 'green');
+
 			// Updating UI
 			} else if ( message == 'collective-rs') {
 				RS.html(encloseIn('h2', data))
@@ -255,12 +257,13 @@ $(function () {
 				var m1 = (message.charAt(9) == "1");
 				var EL = m1 ? M1 : M2;
 				var history = m1 ? M1_history : M2_history;
+				var number = m1 ? 1 : 2;
 
 		        if (history.length >= MUSICIAN_NOTE_HISTORY_SIZE) {
 		            history.pop();
 		        }
 				history.unshift(data);
-				EL.html(templates.musician({history: history}));
+				EL.html(templates.musician({history: history, number: number}));
 			} else if (message == 'status-midi') {
 			  	$("#midi").css('background-color', 'green');
 			} else if (message == 'status-biometric') {

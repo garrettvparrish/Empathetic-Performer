@@ -3,6 +3,7 @@
 /**
  * Import Header
  * @param history
+ * @param number
  */
 {template .musician}
 	<table style="width:100%">
@@ -23,6 +24,36 @@
 		    <td class="value">{$note.timestamp}</td>
 		  </tr>
 		{/foreach}
+	</table>
+	<table>
+		<tr>
+			<td class="feedback-label">
+				<h2> Heat </h2>
+			</td>
+			<td class="feedback-label">
+				<h2> Vibration </h2>
+			</td>
+			<td class="feedback-label">
+				<h2> Cold </h2>
+			</td>
+		</tr>
+		<tr>
+			<td class="feedback-indicator">
+				<center>
+					<div class="feedback" id="feedback-m{$number}-hot"></div>				
+				</center>
+			</td>
+			<td class="feedback-indicator">
+				<center>
+					<div class="feedback" id="feedback-m{$number}-vib"></div>				
+				</center>
+			</td>
+			<td class="feedback-indicator">
+				<center>
+					<div class="feedback" id="feedback-m{$number}-cold"></div>				
+				</center>
+			</td>
+		</tr>
 	</table>
 
 {/template} 
