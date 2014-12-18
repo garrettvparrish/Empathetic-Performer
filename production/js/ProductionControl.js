@@ -265,7 +265,8 @@ $(function () {
 				} else {
 					var m1 = (message.charAt(9) == "1");
 					var type = message.substring(11, message.length);
-					console.log(type);
+					var fullHeight = 100;
+
 					// Vibration
 					if (type == 'vib') {
 						var id = '#feedback-m' + number + '-vib';
@@ -283,14 +284,20 @@ $(function () {
 					  	$(id).css('background-color', '#' + rgbToHex(0, 0, data * 255));
 
 					// Business
-					} else if (type == 'b') {
-
+					} else if (type == 'il') {
+						if (data != 0) {
+							console.log(data);
+							console.log(data * fullHeight);
+							var id = '#m' + number + '-intensity-level';
+						  	$(id).css('height',  data*fullHeight + 'px');							
+						}
 					// Rythmic Variation
-					} else if (type == 'rv') {
-
+					} else if (type == 'rb') {
+						if (data != 0) {
+							var id = '#m' + number + '-rhythmic-business';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}
 					}
-
-
 				}
 
 			} else if (message == 'status-midi') {

@@ -11,8 +11,6 @@ utils = require("./lib/utils.js"),
 musician_feedback = require("./musician/BiometricFeedback.js"),
 midi_analyzer = require("./musician/MidiAnalyzer.js");
 
-console.log('HELLO"')
-
 var WebSocketServer = socket.Server
 var wss = new WebSocketServer({port: 3000});
 

@@ -17,8 +17,12 @@ h1 {
 	}
 }
 
-.individual-metric {
+.individual-metric-container {
+	vertical-align: bottom;
 	height: 100px;
+}
+
+.individual-metric {
 	width: 80%;
 	padding-left: 5px;
 	padding-right: 5px;
