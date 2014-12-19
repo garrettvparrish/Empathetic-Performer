@@ -2,6 +2,10 @@
 //  VARIABLES  //
 /////////////////
 
+var angle = 0;
+
+var circleSpeed = 0.03;
+
 int numParticles = 250;
 
 //Fewer particles for mobile, for better performance
@@ -38,10 +42,11 @@ void setup() {
 ////////////
 
 void draw() {
-	background(100);
-	
+	background(50 + 50 * il);
+
+	// velocity	
 	float md = mouseX - pmouseX;
-	
+
 	if (mousePressed) {
 		for(int i = 0; i < numParticles; i++) {
 			particles[i].flagForNewHue();
@@ -53,6 +58,9 @@ void draw() {
 		particles[i].update();
 		particles[i].render();
 	}
+
+	angle += (2*3.14) * circleSpeed * rb % (2*3.14);
+
 }
 
 class Particle {
@@ -89,7 +97,13 @@ class Particle {
 	void update() {
 		l.add(v);
 		if ((l.x < 0) || (l.x > width) || (l.y < 0) || (l.y > height)) {
-			l.set(mouseX, mouseY, 0);
+
+			var radius = 200;
+			var x = window.innerWidth/2 + radius*cos(angle);
+			var y = window.innerHeight/2 + radius*sin(angle);
+
+			l.set(x, y, 0);
+
 			v.set(random(-maxVelocity, maxVelocity), random(-maxVelocity, maxVelocity), 0);
 			if(newHueFlag) {
 				this.newHue();

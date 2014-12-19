@@ -11,7 +11,7 @@ exports.biometricFeedbackEmitter = function () {
 biometricFeedback = new arduino.Board();
 
 // Variables
-var heat, vib1, vib2, color;
+var heat, vib1, vib2, color, brightness;
 
 exports.setVibes = function (i) {
 	if (vib1) {
@@ -25,6 +25,10 @@ exports.setVibes = function (i) {
 	if (heat) {
 		heat.start(i * 255);		
 	}
+}
+
+exports.brightness = function () {
+	return brightness;
 }
 
 exports.color = function () {
@@ -65,9 +69,8 @@ biometricFeedback.on("ready", function() {
 		pin: 8
 	})
 
-	this.pinMode(8, arduino.Pin.ANALOG);
-	    this.analogRead(1, function(voltage) {
-    	console.log(voltage);
-	});
+	brightness = new arduino.Motor({
+		pin: 7
+	})
 
 });

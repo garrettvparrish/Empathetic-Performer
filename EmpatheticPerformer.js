@@ -88,6 +88,22 @@ var trigger_color = function (val) {
     update_production('musician', 'color', val);
 }
 
+var trigger_brightness = function (val) {
+    var brightness = musician_feedback.brightness();
+    if (brightness) {
+        brightness.start(val * 255);        
+    }
+    update_production('musician', 'brightness', val);
+}
+
+var trigger_audience = function (mes, val) {
+    var to_send = JSON.stringify({message: mes, id: audience_uuid, data: 1.0-val});
+    utils.log(to_send);
+    var specificSocket = CLIENTS[audience_uuid];
+    if (specificSocket) {
+        specificSocket.send(to_send);
+    }
+}
 
 /////////////////////////////////////
 /////// WEB SOCKET HANDLERS /////////
@@ -171,7 +187,7 @@ wss.on('connection', function(client_socket) {
             } else if (mes == 'color-control') {
                 trigger_color(data);
             } else if (mes == 'brightness-control') {
-            
+                trigger_brightness(data);
             }
         }
     });
@@ -218,6 +234,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(il1 - il2);
+    trigger_audience('il', collective);
     update_production('collective','il', collective);
 
     // Intensity Business
@@ -229,6 +246,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(ib1 - ib2);
+    trigger_audience('ib', collective);
     update_production('collective','ib', collective);
 
     // Rhythmic Business
@@ -243,6 +261,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(rb1 - rb2);
+    trigger_audience('rb', collective);
     update_production('collective','rb', collective);
 
     // Rythmic Variation
@@ -254,6 +273,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(rv1 - rv2);
+    trigger_audience('rv', collective);
     update_production('collective','rv', collective);
 
     // Harmonic Business
@@ -269,6 +289,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(mb1 - mb2);
+    trigger_audience('mb', collective);
     update_production('collective','mb', collective);
 
     // Harmonic Variation
@@ -280,6 +301,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(mv1 - mv2);
+    trigger_audience('mv', collective);
     update_production('collective','mv', collective);
 
     // Patterns
@@ -291,6 +313,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(p1 - p2);
+    trigger_audience('p', collective);
     update_production('collective','p', collective);
 
     // Articulation
@@ -306,6 +329,7 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(a1 - a2);
+    trigger_audience('a', collective);
     update_production('collective','a', collective);
 
 }, 100)

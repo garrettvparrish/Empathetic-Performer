@@ -1,3 +1,13 @@
+var thisvariable = 3234;
+var a = 0;
+var p = 0;
+var mv = 0;
+var mb = 0;
+var rv = 0;
+var rb = 0;
+var il = 0;
+var iv = 0;
+
 $(function () {
 
 	// UI helper functions
@@ -34,7 +44,6 @@ $(function () {
 		var obj = JSON.parse(event.data);
 		var message = obj['message'];
 		var data = obj['data'];
-		console.log(event.data);
 
 		// Establishing a new connection -- send a handshake
 		if (message == 'connection') {
@@ -46,19 +55,19 @@ $(function () {
 		// Play the audio file
 		} 
 
-		if (message == 'start-sync') {
-			console.log("Playing sound");
-
-			var water = document.getElementById("water");
-			water.play();
-
-		// Update the display
-		}
-
 		if (message == 'audio-amp') {
 			var val = parseFloat(data);
 			var rgb = "#" + rgbToHex(val * 30, val * 90, val * 255); 
 			document.body.style.backgroundColor = rgb;
 		}
+
+		if (message == 'il') il = data;
+		if (message == 'ib') ib = data;
+		if (message == 'a') a = data;
+		if (message == 'p') p = data;
+		if (message == 'mv') mv = data;
+		if (message == 'mb') mb = data;
+		if (message == 'rv') rv = data;
+		if (message == 'rb') rb = data;
 	}
 });
