@@ -30,7 +30,7 @@ $(function () {
 						content: [					
 					    	{
 						        type:'component',
-						        componentName: 'collective',
+						        componentName: 'Collective',
 						        componentState: { text: '' },
 				                isClosable: false
 					    	}]
@@ -65,7 +65,7 @@ $(function () {
 	});
 
 	var COLLECTIVE;
-	myLayout.registerComponent( 'collective', function( container, state ){
+	myLayout.registerComponent( 'Collective', function( container, state ){
 		COLLECTIVE = container.getElement();
 		COLLECTIVE.html(templates.collective());
 	});
@@ -145,9 +145,8 @@ $(function () {
 
 			// Collective Attributes
 			} else if (message.indexOf("collective") > -1) {
-				console.log(event.data);
-			  	$('#' + message).css('height',  data*fullHeight + 'px');
-			  	// console.log(el.height());
+				var id = '#' + message;
+			  	$(id).html(100 * data.toFixed(2));							
 
 			// Musician Attributes
 			} else if (message.indexOf("musician") > -1) {
