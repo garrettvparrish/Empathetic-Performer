@@ -147,7 +147,8 @@ $(function () {
 			// Collective Attributes
 			} else if (message.indexOf("collective") > -1) {
 				var id = '#' + message;	
-			  	$(id).html(100 * data.toFixed(2));							
+				var inner = '<p class="percentage">' + 100 * data.toFixed(2) + '%</p>';
+			  	$(id).html(inner);							
 
 			// Musician Attributes
 			} else if (message.indexOf("musician") > -1) {

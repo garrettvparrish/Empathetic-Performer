@@ -3,6 +3,13 @@ h2 {
 	font-size: 15px;
 }
 
+.percentage {
+	font-size: 30px;
+	color: black;
+	font-family: 'Helvetica';
+	vertical-align: center;
+}
+
 h1 {
 	font-family: 'Helvetica';
 	color: white;
@@ -17,7 +24,7 @@ h1 {
 }
 
 .collective-metric-container {
-	vertical-align: bottom;
+	vertical-align: center;
 	height: 100px;
 }
 

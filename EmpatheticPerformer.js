@@ -34,9 +34,16 @@ var update_production = function (section, key, val) {
     }
 }
 
+var trigger_audience = function (mes, val) {
+    var to_send = JSON.stringify({message: mes, id: audience_uuid, data: val});
+    var specificSocket = CLIENTS[audience_uuid];
+    if (specificSocket) {
+        specificSocket.send(to_send);
+    }
+}
+
 var send_to_id = function (mes, i, d) {
     d = d ? d : "";
-    // utils.log("Sending '" + mes + "' to " + i + " with data: " + d);
     var to_send = JSON.stringify({message: mes, id: i, data: d});
     var specificSocket = CLIENTS[i];
     specificSocket.send(to_send);   
@@ -78,6 +85,9 @@ var trigger_heat = function (val) {
         heat.start(val * 255);        
     }
     update_production('musician-1', 'hot', val);
+    update_production('musician-2', 'hot', val);
+    update_production('musician-1', 'cld', 1.0-val);
+    update_production('musician-2', 'cld', 1.0-val);
 }
 
 var trigger_color = function (val) {
@@ -96,14 +106,6 @@ var trigger_brightness = function (val) {
     update_production('musician', 'brightness', val);
 }
 
-var trigger_audience = function (mes, val) {
-    var to_send = JSON.stringify({message: mes, id: audience_uuid, data: 1.0-val});
-    utils.log(to_send);
-    var specificSocket = CLIENTS[audience_uuid];
-    if (specificSocket) {
-        specificSocket.send(to_send);
-    }
-}
 
 /////////////////////////////////////
 /////// WEB SOCKET HANDLERS /////////
@@ -149,7 +151,7 @@ wss.on('connection', function(client_socket) {
 
             } else if (mes == "identify") {
 
-                utils.log("Identifying " + identifier + " as " + data);
+                // utils.log("Identifying " + identifier + " as " + data);
 
                 if (data == 'musician-1') {
                     m1_uuid = identifier;
@@ -234,8 +236,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(il1 - il2);
-    trigger_audience('il', collective);
-    update_production('collective','il', collective);
+    trigger_audience('il', 1.0-collective);
+    update_production('collective','il', 1.0-collective);
 
     // Intensity Business
     var ib1 = midi_analyzer.differentiate(1,'il');
@@ -246,8 +248,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(ib1 - ib2);
-    trigger_audience('ib', collective);
-    update_production('collective','ib', collective);
+    trigger_audience('ib', 1.0-collective);
+    update_production('collective','ib', 1.0-collective);
 
     // Rhythmic Business
     var rb1 = midi_analyzer.rhythmicBusiness(1);
@@ -261,8 +263,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(rb1 - rb2);
-    trigger_audience('rb', collective);
-    update_production('collective','rb', collective);
+    trigger_audience('rb', 1.0-collective);
+    update_production('collective','rb', 1.0-collective);
 
     // Rythmic Variation
     var rv1 = midi_analyzer.differentiate(1,'rv');
@@ -273,8 +275,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(rv1 - rv2);
-    trigger_audience('rv', collective);
-    update_production('collective','rv', collective);
+    trigger_audience('rv', 1.0-collective);
+    update_production('collective','rv', 1.0-collective);
 
     // Harmonic Business
     var mb1 = midi_analyzer.harmonicBusiness(1);
@@ -289,8 +291,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(mb1 - mb2);
-    trigger_audience('mb', collective);
-    update_production('collective','mb', collective);
+    trigger_audience('mb', 1.0-collective);
+    update_production('collective','mb', 1.0-collective);
 
     // Harmonic Variation
     var mv1 = midi_analyzer.differentiate(1,'mv');
@@ -301,8 +303,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(mv1 - mv2);
-    trigger_audience('mv', collective);
-    update_production('collective','mv', collective);
+    trigger_audience('mv', 1.0-collective);
+    update_production('collective','mv', 1.0-collective);
 
     // Patterns
     var p1 = midi_analyzer.pattern();
@@ -313,8 +315,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(p1 - p2);
-    trigger_audience('p', collective);
-    update_production('collective','p', collective);
+    trigger_audience('p', 1.0-collective);
+    update_production('collective','p', 1.0-collective);
 
     // Articulation
     var a1 = midi_analyzer.articulation(1);
@@ -329,8 +331,8 @@ setInterval(function () {
 
     // Collective
     var collective = math.abs(a1 - a2);
-    trigger_audience('a', collective);
-    update_production('collective','a', collective);
+    trigger_audience('a', 1.0-collective);
+    update_production('collective','a', 1.0-collective);
 
 }, 100)
 

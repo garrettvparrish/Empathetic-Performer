@@ -46,7 +46,6 @@ var BEAT_SIZE = 100;
 var HISTORY_TIME = 5000;
 
 exports.update_histories = function (t) {
-    // console.log("Updating histories");
     var h = [musician1_history, musician2_history];
     for (var history in h) {
         for (var i = 0; i < history.length; i++) {
@@ -82,7 +81,7 @@ exports.differentiate = function (musician, key) {
 exports.articulation = function (musician) {
     var history = (musician == 1) ? musician1_history : musician2_history;
 
-    var WINDOW_SIZE = 8;
+    var WINDOW_SIZE = 4;
     history = history.slice(0,WINDOW_SIZE * 2);
     var sum = 0;
     var max_duration = 0.0;
@@ -119,7 +118,7 @@ exports.articulation = function (musician) {
     var min = 80.0;
     var max = 500.0;
     var avg = math.max(min, math.min(max,sum/notes)) / (max - min);
-    return math.max(0, math.min(1.0, avg));
+    return math.max(0, math.min(1.0, avg - .19));
 }
 
 exports.harmonicBusiness = function (musician) {

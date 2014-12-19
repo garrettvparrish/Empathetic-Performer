@@ -4,9 +4,9 @@
 
 var angle = 0;
 
-var circleSpeed = 0.03;
+var circleSpeed = 0.01;
 
-int numParticles = 250;
+int numParticles = 170;
 
 //Fewer particles for mobile, for better performance
 if (window.innerWidth <= 480) {
@@ -47,12 +47,10 @@ void draw() {
 	// velocity	
 	float md = mouseX - pmouseX;
 
-	if (mousePressed) {
-		for(int i = 0; i < numParticles; i++) {
-			particles[i].flagForNewHue();
-		}
-		newHueVal = random(0, 100);
+	for(int i = 0; i < numParticles; i++) {
+		particles[i].flagForNewHue();
 	}
+	newHueVal = random(0, 100);
 
 	for (int i = 0; i < numParticles; i++) {
 		particles[i].update();
@@ -60,7 +58,6 @@ void draw() {
 	}
 
 	angle += (2*3.14) * circleSpeed * rb % (2*3.14);
-
 }
 
 class Particle {
@@ -89,8 +86,9 @@ class Particle {
 	}
 	
 	void newHue() {
-		d += 1.5;
-		h = newHueVal;
+		d = (d + (a - .5));
+		d = max(5, min(d,20));
+		h = random(mb * 95, mb * 105);
 		b = random(25, 75);
 	}
 	
@@ -98,7 +96,7 @@ class Particle {
 		l.add(v);
 		if ((l.x < 0) || (l.x > width) || (l.y < 0) || (l.y > height)) {
 
-			var radius = 200;
+			var radius = 300;
 			var x = window.innerWidth/2 + radius*cos(angle);
 			var y = window.innerHeight/2 + radius*sin(angle);
 
