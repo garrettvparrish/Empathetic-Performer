@@ -12,9 +12,9 @@ echo '[Empathetic Performer - Build] Opening Production Control.';
 echo '------------------------------';
 cd ..; open ProductionControl.html; cd ..;
 
-echo '[Empathetic Performer - Build] Opening Audience Control.';
-echo '------------------------------';
-open http://localhost:8888/audience/AudienceControl.html;
+# echo '[Empathetic Performer - Build] Opening Audience Control.';
+# echo '------------------------------';
+# open http://localhost:8888/audience/AudienceControl.html;
 
 echo '[Empathetic Performer - Build] Opening Audience Visuals.'
 echo '------------------------------';

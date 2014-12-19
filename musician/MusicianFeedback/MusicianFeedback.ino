@@ -646,38 +646,38 @@ void loop()
       }
     }
   }
-
-  int color = analogRead(8);
-  int brightness = analogRead(9);
-
-  int scaled_color = map(color, 0, 1023, 0, 255);
-  int scaled_brightness = map(brightness, 0, 1023, 0, 255);
-  
-  byte WheelPos = scaled_color;
-  int r = 0;
-  int g = 0;
-  int b = 0;
-  
-  if(WheelPos < 85) {
-    r = WheelPos * 3;
-    g = 255 - WheelPos * 3;
-    b = 0;
-  } else if(WheelPos < 170) {
-    WheelPos -= 85;
-    r = 255 - WheelPos * 3;
-    g = 0;
-    b = WheelPos * 3;
-  } else {
-   WheelPos -= 170;
-   r = 0;
-   g = WheelPos * 3;
-   b = 255 - WheelPos * 3;
-  }
-  
-  for(int i=0;i<NUMPIXELS;i++){
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    pixels.setBrightness(scaled_brightness);
-    pixels.setPixelColor(i, pixels.Color(r,g,b)); // Moderately bright green color.    
-    pixels.show(); // This sends the updated pixel color to the hardware.
-  }
+//
+//  int color = analogRead(8);
+//  int brightness = analogRead(9);
+//
+//  int scaled_color = map(color, 0, 1023, 0, 255);
+//  int scaled_brightness = map(brightness, 0, 1023, 0, 255);
+//  
+//  byte WheelPos = scaled_color;
+//  int r = 0;
+//  int g = 0;
+//  int b = 0;
+//  
+//  if(WheelPos < 85) {
+//    r = WheelPos * 3;
+//    g = 255 - WheelPos * 3;
+//    b = 0;
+//  } else if(WheelPos < 170) {
+//    WheelPos -= 85;
+//    r = 255 - WheelPos * 3;
+//    g = 0;
+//    b = WheelPos * 3;
+//  } else {
+//   WheelPos -= 170;
+//   r = 0;
+//   g = WheelPos * 3;
+//   b = 255 - WheelPos * 3;
+//  }
+//  
+//  for(int i=0;i<NUMPIXELS;i++){
+//    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
+//    pixels.setBrightness(scaled_brightness);
+//    pixels.setPixelColor(i, pixels.Color(r,g,b)); // Moderately bright green color.    
+//    pixels.show(); // This sends the updated pixel color to the hardware.
+//  }
 }

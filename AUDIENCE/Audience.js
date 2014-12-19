@@ -1,4 +1,3 @@
-var thisvariable = 3234;
 var a = 0;
 var p = 0;
 var mv = 0;
