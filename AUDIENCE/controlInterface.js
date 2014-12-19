@@ -11,16 +11,16 @@ $(document).ready(function() {
 	// Web socket connections
 	var uuid = "";
 	var audienceSocket;
+	var status = document.getElementById("status");
 	
-	audienceSocket = new WebSocket("ws://localhost:3000", "protocolOne");
-
+	audienceSocket = new WebSocket("ws://18.111.102.148:3000", "protocolOne");
+	
 	var send_message = function (key, d) {
 		audienceSocket.send(JSON.stringify({message: key, id: uuid, data: 1.0 - d}));
 	}
 	
 	audienceSocket.onopen = function (event) {
-		console.log("Socket connection opened.");
-		// audienceSocket.send(JSON.stringify({message: }))
+		status.innerHTML = "Socket connection opened.";
 	};
 
 	audienceSocket.onmessage = function (event) {
@@ -28,7 +28,6 @@ $(document).ready(function() {
 		var obj = JSON.parse(event.data);
 		var message = obj['message'];
 		var data = obj['data'];
-		console.log(event.data);
 
 		// Establishing a new connection -- send a handshake
 		if (message == 'connection') {
@@ -37,6 +36,7 @@ $(document).ready(function() {
 			var res = {message: "identify", id: uuid, data: 'audience-control'};
 		  	audienceSocket.send(JSON.stringify(res)); 
 		}
+		status.innerHTML = event.data;
 	}
 
 	// rotational control

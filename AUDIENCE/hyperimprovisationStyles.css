@@ -6,6 +6,12 @@ td {
 	color: white;
 }
 
+#status {
+	padding: 20px;
+	font-size: 20pt;
+	color: white;
+}
+
 .slider {
 	margin-top: 16%;
 	margin-left: 5%;
