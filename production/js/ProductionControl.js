@@ -292,6 +292,11 @@ $(function () {
 						  	$(id).css('height',  data*fullHeight + 'px');							
 						}
 					// Rythmic Variation
+					} else if (type == 'a') {
+						if (data != 0) {
+							var id = '#m' + number + '-articulation';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}
 					} else if (type == 'rb') {
 						if (data != 0) {
 							var id = '#m' + number + '-rhythmic-business';
@@ -302,8 +307,27 @@ $(function () {
 							var id = '#m' + number + '-melodic-business';
 						  	$(id).css('height',  data*fullHeight + 'px');
 						}						
+					} else if (type == 'iv') {
+						if (data != 0) {
+							var id = '#m' + number + '-intensity-variation';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}						
+					} else if (type == 'rv') {
+						if (data != 0) {
+							var id = '#m' + number + '-rhythmic-variation';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}						
+					} else if (type == 'mv') {
+						if (data != 0) {
+							var id = '#m' + number + '-melodic-variation';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}						
+					} else if (type == 'p') {
+						if (data != 0) {
+							var id = '#m' + number + '-pattern';
+						  	$(id).css('height',  data*fullHeight + 'px');
+						}						
 					}
-
 				}
 
 			} else if (message == 'status-midi') {

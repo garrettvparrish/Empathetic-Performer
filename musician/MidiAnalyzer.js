@@ -1,8 +1,18 @@
+
 var math = require('mathjs');
 var midi = require('midi');
 var ipc = require('ipc');
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
+
+var DERIVATIVE_HISTORY_SIZE = 4;
+
+var il1_history = [];
+var il2_history = [];
+var rb1_history = [];
+var rb2_history = [];
+var mb1_history = [];
+var mb2_history = [];
 
 exports.midiEmitter = function () {
     return eventEmitter;
@@ -35,17 +45,37 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var HISTORY_TIME = 5000;
 
+
+exports.differentiate = function (musician, key) {
+    var history;
+    if (key == 'il') {
+        history = (musician == 1) ? il1_history : il1_history;
+    } else if (key == 'rv') {
+        history = (musician == 1) ? rb1_history : rb2_history;
+    } else if (key == 'mv') {        
+        history = (musician == 1) ? mb1_history : mb2_history;
+    }
+
+    var sum = 0;
+    for (var i = 1; i < DERIVATIVE_HISTORY_SIZE; i++) {
+        sum += (history[i] - history[i - 1]); 
+    }
+    var avg = sum / DERIVATIVE_HISTORY_SIZE * 10.0;
+    return avg;
+}
+
 exports.articulation = function (musician) {
     var history = (musician == 1) ? musician1_history : musician2_history;
-    
-    var WINDOW_SIZE = 20;
+
+    var WINDOW_SIZE = 8;
+    history = history.slice(0,WINDOW_SIZE * 2);
     var sum = 0;
     var max_duration = 0.0;
     var min_duration = 0.0;
-
+    var notes = 0;
     if (history) {
         if (history.length > WINDOW_SIZE) {
-            for (var i = history.length - 1; i > 0; i--) {
+            for (var i = history.length - 1; i > WINDOW_SIZE; i--) {
                 var found = false;
                 var note = history[i];
                 if (note.action == 'on') {
@@ -53,6 +83,7 @@ exports.articulation = function (musician) {
                         var note_to_check = history[j];
                         if (note_to_check.action == 'off') {
                             if (note_to_check.note_letter == note.note_letter && !found) {
+                                notes ++;
                                 var duration = note_to_check.timestamp - note.timestamp;                            
 
                                 // keep a running max/min for normalizing
@@ -70,10 +101,10 @@ exports.articulation = function (musician) {
             }
         }
     }
-
-    var normalized =
-
-    return 0.0;
+    var min = 80.0;
+    var max = 500.0;
+    var avg = math.max(min, math.min(max,sum/notes)) / (max - min);
+    return math.max(0, math.min(1.0, avg));
 }
 
 exports.harmonicBusiness = function (musician) {
@@ -100,7 +131,26 @@ exports.harmonicBusiness = function (musician) {
     // 35.0 is the range of velocities
     var range = 35.0;
     var hb = math.max(0.0, math.min(1.0, sum / (range * WINDOW_SIZE) * 2.0));
+
+    if (hb != history[0] || history[0] == 0) {
+        var history = (musician == 1) ? mb1_history : mb2_history;    
+        if (history.length >= DERIVATIVE_HISTORY_SIZE) {
+            history.pop();
+        }
+        history.unshift(hb);        
+    }
     return hb;
+}
+
+exports.pattern = function (musician) {
+    var num = math.random();
+    if (num > .9) {
+        return .3;
+    } else if (num > .95) {
+        return .6;
+    } else {
+        return 0;
+    }
 }
 
 exports.intensityLevel = function (musician) {
@@ -122,6 +172,13 @@ exports.intensityLevel = function (musician) {
 
     // 127 is the range of velocities
     var il = math.max(0.0, math.min(1.0, sum / (87.0 * WINDOW_SIZE) * 2.0));
+    var history = (musician == 1) ? il1_history : il2_history;
+    if (il != history[0] || history[0] == 0) {
+        if (history.length >= DERIVATIVE_HISTORY_SIZE) {
+            history.pop();
+        }
+        history.unshift(il);          
+    }
     return il;
 }
 
@@ -145,6 +202,16 @@ exports.rhythmicBusiness = function (musician) {
     var rv = sum / (500.0 * WINDOW_SIZE);
 
     var normalized = 1.0 - math.max(0, math.min(1.0, rv));
+
+    var history = (musician == 1) ? rb1_history : rb2_history;    
+    if (normalized != history[0] || history[0] == 0) {
+
+        if (history.length >= DERIVATIVE_HISTORY_SIZE) {
+            history.pop();
+        }
+        history.unshift(normalized);        
+    }
+
     return normalized;
 }
 

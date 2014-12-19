@@ -158,6 +158,9 @@ wss.on('connection', function(client_socket) {
 
 });
 
+
+var HISTORY_SIZE = 20;
+
 // Compute statistics 10x a second
 setInterval(function () {
     var d = new Date();
@@ -180,12 +183,18 @@ setInterval(function () {
     if (il1 != 0) {
         update_production('musician-1', 'il', il1);
     }
+
     var il2 = midi_analyzer.intensityLevel(2);
     if (il2 != 0) {
         update_production('musician-2', 'il', il2);
     }
 
     // Intensity Business
+    var ib1 = midi_analyzer.differentiate(1,'il');
+    update_production('musician-1', 'iv', ib1);
+
+    var ib2 = midi_analyzer.differentiate(2,'il');
+    update_production('musician-2', 'iv', ib2);
 
     // Rhythmic Business
     var rb1 = midi_analyzer.rhythmicBusiness(1);
@@ -198,6 +207,11 @@ setInterval(function () {
     }
 
     // Rythmic Variation
+    var rv1 = midi_analyzer.differentiate(1,'rv');
+    update_production('musician-1', 'rv', rv1);
+
+    var rv2 = midi_analyzer.differentiate(2,'rv');
+    update_production('musician-2', 'rv', rv2);
 
     // Harmonic Business
     var hb1 = midi_analyzer.harmonicBusiness(1);
@@ -211,8 +225,18 @@ setInterval(function () {
     }
 
     // Harmonic Variation
+    var mv1 = midi_analyzer.differentiate(1,'mv');
+    update_production('musician-1', 'mv', mv1);
+
+    var mv2 = midi_analyzer.differentiate(2,'mv');
+    update_production('musician-2', 'mv', mv2);
 
     // Patterns
+    var p1 = midi_analyzer.pattern();
+    update_production('musician-1', 'p', p1);
+
+    var p2 = midi_analyzer.pattern();
+    update_production('musician-2', 'p', p2);
 
     // Articulation
     var a1 = midi_analyzer.articulation(1);
