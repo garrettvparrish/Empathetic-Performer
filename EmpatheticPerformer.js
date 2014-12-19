@@ -80,6 +80,15 @@ var trigger_heat = function (val) {
     update_production('musician-1', 'hot', val);
 }
 
+var trigger_color = function (val) {
+    var color = musician_feedback.color();
+    if (color) {
+        color.start(val * 255);        
+    }
+    update_production('musician', 'color', val);
+}
+
+
 /////////////////////////////////////
 /////// WEB SOCKET HANDLERS /////////
 /////////////////////////////////////
@@ -155,13 +164,12 @@ wss.on('connection', function(client_socket) {
                 }
                 utils.log("Current Audience Members: " + audience_members);
             } else if (mes == 'temperature-control') {
-
+                trigger_heat(data);
             } else if (mes == 'vibration-control') {
                 trigger_vib1(data);
                 trigger_vib2(data);
-
             } else if (mes == 'color-control') {
-
+                trigger_color(data);
             } else if (mes == 'brightness-control') {
             
             }

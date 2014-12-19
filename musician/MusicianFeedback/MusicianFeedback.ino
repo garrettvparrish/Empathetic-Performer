@@ -645,9 +645,45 @@ void loop()
     }
   }
 
+  int color = analogRead(8);
+  int scaled_color = map(color, 0, 1023, 0, 255);
+
+  byte WheelPos = scaled_color;
+  int r = 0;
+  int g = 0;
+  int b = 0;
+  
+  if(WheelPos < 85) {
+    r = WheelPos * 3;
+    g = 255 - WheelPos * 3;
+    b = 0;
+  } else if(WheelPos < 170) {
+    WheelPos -= 85;
+    r = 255 - WheelPos * 3;
+    g = 0;
+    b = WheelPos * 3;
+  } else {
+   WheelPos -= 170;
+   r = 0;
+   g = WheelPos * 3;
+   b = 255 - WheelPos * 3;
+  }
+  
+  if (WheelPos < .2) {
+    r = 0;
+    g = 0;
+    b = 0;
+  }
+
+//  CURRENT_COLOR = strip.Color(r,g,b);
+//  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+//    strip.setPixelColor(i, CURRENT_COLOR);
+//  }
+  
   for(int i=0;i<NUMPIXELS;i++){
     // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    pixels.setPixelColor(i, pixels.Color(0,150,0)); // Moderately bright green color.
+    pixels.setBrightness(255);
+    pixels.setPixelColor(i, pixels.Color(r,g,b)); // Moderately bright green color.    
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(10); // Delay for a period of time (in milliseconds).
   }
