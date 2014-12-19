@@ -9,6 +9,7 @@ filesys = require("fs"),
 audience = require("./audience/AudienceFileServer.js"),
 utils = require("./lib/utils.js"),
 musician_feedback = require("./musician/BiometricFeedback.js"),
+math = require('mathjs'),
 midi_analyzer = require("./musician/MidiAnalyzer.js");
 
 var WebSocketServer = socket.Server
@@ -170,9 +171,9 @@ setInterval(function () {
     /////// COLLECTIVE ATTRIBUTES ///////
     /////////////////////////////////////
 
-    // collective attributes
-    var rs = midi_analyzer.rythmicSynchronicity(t);
-    update_production('collective', 'rs', rs);
+    // // collective attributes
+    // var rs = midi_analyzer.rythmicSynchronicity(t);
+    // update_production('collective', 'rs', rs);
 
     /////////////////////////////////////
     /////// INDIVIDUAL ATTRIBUTES ///////
@@ -189,12 +190,20 @@ setInterval(function () {
         update_production('musician-2', 'il', il2);
     }
 
+    // Collective
+    var collective = math.abs(il1 - il2);
+    update_production('collective','il', collective);
+
     // Intensity Business
     var ib1 = midi_analyzer.differentiate(1,'il');
     update_production('musician-1', 'iv', ib1);
 
     var ib2 = midi_analyzer.differentiate(2,'il');
     update_production('musician-2', 'iv', ib2);
+
+    // Collective
+    var collective = math.abs(ib1 - ib2);
+    update_production('collective','ib', collective);
 
     // Rhythmic Business
     var rb1 = midi_analyzer.rhythmicBusiness(1);
@@ -206,6 +215,10 @@ setInterval(function () {
         update_production('musician-2', 'rb', rb2);
     }
 
+    // Collective
+    var collective = math.abs(rb1 - rb2);
+    update_production('collective','rb', collective);
+
     // Rythmic Variation
     var rv1 = midi_analyzer.differentiate(1,'rv');
     update_production('musician-1', 'rv', rv1);
@@ -213,16 +226,24 @@ setInterval(function () {
     var rv2 = midi_analyzer.differentiate(2,'rv');
     update_production('musician-2', 'rv', rv2);
 
+    // Collective
+    var collective = math.abs(rv1 - rv2);
+    update_production('collective','rv', collective);
+
     // Harmonic Business
-    var hb1 = midi_analyzer.harmonicBusiness(1);
-    if (hb1 != 0) {
-        update_production('musician-1', 'hb', hb1);
+    var mb1 = midi_analyzer.harmonicBusiness(1);
+    if (mb1 != 0) {
+        update_production('musician-1', 'hb', mb1);
     }
 
-    var hb2 = midi_analyzer.harmonicBusiness(2);
-    if (hb2 != 0) {
-        update_production('musician-2', 'hb', hb2);
+    var mb2 = midi_analyzer.harmonicBusiness(2);
+    if (mb2 != 0) {
+        update_production('musician-2', 'hb', mb2);
     }
+
+    // Collective
+    var collective = math.abs(mb1 - mb2);
+    update_production('collective','mb', collective);
 
     // Harmonic Variation
     var mv1 = midi_analyzer.differentiate(1,'mv');
@@ -231,12 +252,20 @@ setInterval(function () {
     var mv2 = midi_analyzer.differentiate(2,'mv');
     update_production('musician-2', 'mv', mv2);
 
+    // Collective
+    var collective = math.abs(mv1 - mv2);
+    update_production('collective','mv', collective);
+
     // Patterns
     var p1 = midi_analyzer.pattern();
     update_production('musician-1', 'p', p1);
 
     var p2 = midi_analyzer.pattern();
     update_production('musician-2', 'p', p2);
+
+    // Collective
+    var collective = math.abs(p1 - p2);
+    update_production('collective','p', collective);
 
     // Articulation
     var a1 = midi_analyzer.articulation(1);
@@ -248,6 +277,10 @@ setInterval(function () {
     if (a1 != 0) {
         update_production('musician-2', 'a', a2);
     }
+
+    // Collective
+    var collective = math.abs(a1 - a2);
+    update_production('collective','a', collective);
 
 }, 100)
 

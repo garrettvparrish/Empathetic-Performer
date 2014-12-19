@@ -8,6 +8,26 @@ h1 {
 	color: white;
 }
 
+.collective-metric-column {
+	width: 12.5%;
+	text-align: center;
+	h2 {
+		font-size: 5px;
+	}
+}
+
+.collective-metric-container {
+	vertical-align: bottom;
+	height: 100px;
+}
+
+.collective-metric {
+	width: 80%;
+	padding-left: 5px;
+	padding-right: 5px;
+	background-color: white;
+	height: 120px;
+}
 
 .individual-metric-column {
 	width: 12.5%;
@@ -79,14 +99,10 @@ h1 {
 	width: 100%;
 }
 
-.status {
-
-}
-
 .status-indicator {
 	background-color: red;
-	height: 120px;
-	width: 120px;
+	height: 60px;
+	width: 60px;
 	vertical-align: middle;
 }
 

@@ -10,85 +10,30 @@ $(function () {
 	    content: [
 			{
 			    type: 'row',
+		        height: 13,
 			    content: [
 			    	{
 				        type:'component',
 				        componentName: 'Empathetic Performer',
 				        componentState: { text: 'Empathetic Performer' },
 		                isClosable: false,
-		                height: 25,
 		                title: "System Status"
 			    	}
 			  	]
 			},
 			{
 			    type: 'row',
-			    height: 15,
+			    height: 25,
 			    content: [
 			    	{
 			    		type: 'column',
 						content: [					
 					    	{
 						        type:'component',
-						        componentName: 'RS',
-						        componentState: { text: 'RS' },
+						        componentName: 'collective',
+						        componentState: { text: '' },
 				                isClosable: false
 					    	}]
-					},
-					{
-						type: 'column',
-						content: [
-					    	{
-						        type:'component',
-						        componentName: 'MS',
-						        componentState: { text: 'MS' },
-				                isClosable: false
-					    	}
-						]
-					},
-					{
-						type: 'column',
-						content: [
-					    	{
-						        type:'component',
-						        componentName: 'Empathy',
-						        componentState: { text: 'Empathy' },
-				                isClosable: false
-					    	}
-						]
-					},
-					{
-						type: 'column',
-						content: [
-					    	{
-						        type:'component',
-						        componentName: 'Trust',
-						        componentState: { text: 'Trust' },
-				                isClosable: false
-					    	}
-						]
-					},
-					{
-						type: 'column',
-						content: [
-					    	{
-						        type:'component',
-						        componentName: 'Harmonic Change',
-						        componentState: { text: 'Harmonic Change' },
-				                isClosable: false
-					    	}
-						]
-					},
-					{
-						type: 'column',
-						content: [
-					    	{
-						        type:'component',
-						        componentName: 'Rhythmic Change',
-						        componentState: { text: 'Rhythmic Change' },
-				                isClosable: false
-					    	}
-						]
 					}
 				]
 			},
@@ -119,42 +64,10 @@ $(function () {
 		el.html(templates.systemStatus());
 	});
 
-	// Collective Attributes
-
-	var RS;
-	myLayout.registerComponent( 'RS', function( container, state ){
-		RS = container.getElement();
-		RS.html( '<h2>' + state.text + '</h2>');
-	});
-
-	var MS;
-	myLayout.registerComponent( 'MS', function( container, state ){
-		MS = container.getElement();
-		MS.html( '<h2>' + state.text + '</h2>');
-	});
-
-	var TRUST;
-	myLayout.registerComponent( 'Trust', function( container, state ){
-		TRUST = container.getElement();
-		TRUST.html( '<h2>' + state.text + '</h2>');
-	});
-
-	var EMPATHY;
-	myLayout.registerComponent( 'Empathy', function( container, state ){
-		EMPATHY = container.getElement();
-		EMPATHY.html( '<h2>' + state.text + '</h2>');
-	});
-
-	var RC;
-	myLayout.registerComponent( 'Rhythmic Change', function( container, state ){
-		RC = container.getElement();
-		RC.html( '<h2>' + state.text + '</h2>');
-	});
-
-	var HC;
-	myLayout.registerComponent( 'Harmonic Change', function( container, state ){
-		HC = container.getElement();
-		HC.html( '<h2>' + state.text + '</h2>');
+	var COLLECTIVE;
+	myLayout.registerComponent( 'collective', function( container, state ){
+		COLLECTIVE = container.getElement();
+		COLLECTIVE.html(templates.collective());
 	});
 
 	var M1;
@@ -224,7 +137,6 @@ $(function () {
 			uuid = obj['id'];
 			var message = obj['message'];
 			var data = obj['data'];
-			console.log(message);
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
@@ -232,19 +144,10 @@ $(function () {
 			  	$("#production").css('background-color', 'green');
 
 			// Collective Attributes
-			} else if (message == "collective-rc") {
-
-				// RS.html(encloseIn('h2', data))
-			} else if (message == 'collective-ms') {	
-				// MS.html(encloseIn('h2', data))						
-			} else if ( message == 'collective-trust') {
-				// TRUST.html(encloseIn('h2', data))
-			} else if ( message == 'collective-empathy') {
-				// EMPATHY.html(encloseIn('h2', data))
-			} else if ( message == 'collective-rc') {
-				// RC.html(encloseIn('h2', data))
-			} else if ( message == 'collective-hc') {
-				// HC.html(encloseIn('h2', data))
+			} else if (message.indexOf("collective") > -1) {
+				console.log(event.data);
+			  	$('#' + message).css('height',  data*fullHeight + 'px');
+			  	// console.log(el.height());
 
 			// Musician Attributes
 			} else if (message.indexOf("musician") > -1) {
