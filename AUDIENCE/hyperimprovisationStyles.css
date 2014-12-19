@@ -1,0 +1,17 @@
+body {
+    background-color: black;
+}
+
+td {
+	color: white;
+}
+
+.slider {
+	margin-top: 16%;
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 90%; 
+	height: 400px;	
+	float: left;
+	background-color: white;
+}

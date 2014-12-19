@@ -45,6 +45,21 @@ var BEAT_SIZE = 100;
 // how far to look back through history to analyze the similarity
 var HISTORY_TIME = 5000;
 
+exports.update_histories = function (t) {
+    // console.log("Updating histories");
+    var h = [musician1_history, musician2_history];
+    for (var history in h) {
+        for (var i = 0; i < history.length; i++) {
+            var note = history[i];
+            if (note.timestamp < t - HISTORY_TIME) {
+                var index = array.indexOf(note);
+                if (index > -1) {
+                    array.splice(index, 1);
+                }
+            } 
+        }        
+    }
+}
 
 exports.differentiate = function (musician, key) {
     var history;

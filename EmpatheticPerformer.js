@@ -22,6 +22,7 @@ var production_socket;
 var m1_uuid = "";
 var m2_uuid = "";
 var audience_uuid = "";
+var audience_control_uuid;
 
 ///////////////////////////////
 ////// WEB SOCKET SERVER //////
@@ -132,9 +133,15 @@ wss.on('connection', function(client_socket) {
                     m2_uuid = identifier;
 
                 } else if (data == 'audience') {
+                    audience_uuid = identifier;
                     setTimeout(function () {
                         update_production('status', 'audience', {data: true});
                     }, 3000);
+                } else if (data == 'audience-control') {
+                    audience_control_uuid = identifier; 
+                    setTimeout(function () {
+                        update_production('status', 'audience-control', {data: true});
+                    }, 2500);
                 }
 
             // de-identifying a participant in some way
@@ -147,7 +154,17 @@ wss.on('connection', function(client_socket) {
                     }
                 }
                 utils.log("Current Audience Members: " + audience_members);
-            }            
+            } else if (mes == 'temperature-control') {
+
+            } else if (mes == 'vibration-control') {
+                trigger_vib1(data);
+                trigger_vib2(data);
+
+            } else if (mes == 'color-control') {
+
+            } else if (mes == 'brightness-control') {
+            
+            }
         }
     });
 
@@ -159,13 +176,14 @@ wss.on('connection', function(client_socket) {
 
 });
 
-
 var HISTORY_SIZE = 20;
 
 // Compute statistics 10x a second
 setInterval(function () {
     var d = new Date();
     var t = d.getTime();
+
+    midi_analyzer.update_histories();
 
     /////////////////////////////////////
     /////// COLLECTIVE ATTRIBUTES ///////

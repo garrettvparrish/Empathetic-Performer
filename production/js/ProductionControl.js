@@ -137,6 +137,7 @@ $(function () {
 			uuid = obj['id'];
 			var message = obj['message'];
 			var data = obj['data'];
+			console.log(message);
 			// New connection
 			if (message == 'connection') {
 				var res = {message: "production-handshake", id: uuid};
@@ -145,7 +146,7 @@ $(function () {
 
 			// Collective Attributes
 			} else if (message.indexOf("collective") > -1) {
-				var id = '#' + message;
+				var id = '#' + message;	
 			  	$(id).html(100 * data.toFixed(2));							
 
 			// Musician Attributes
@@ -238,6 +239,8 @@ $(function () {
 			  	$("#biometric").css('background-color', 'green');
 			} else if (message == 'status-audience') {
 			  	$("#audience").css('background-color', 'green');				
+			} else if (message == 'status-audience-control') {				
+			  	$("#audience-control").css('background-color', 'green');				
 			}
 		}
 

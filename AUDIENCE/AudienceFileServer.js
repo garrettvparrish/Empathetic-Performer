@@ -19,8 +19,17 @@ http.createServer(function(request, response) {
       return;
     }
  
-    if (fs.statSync(filename).isDirectory()) filename += 'audience/Audience.html';
- 
+
+    var url;
+    if (uri == '/control'){
+      console.log('A:LKDFSJ');
+      url = 'audience/AudienceControl.html';
+    } else {
+      url = 'audience/Audience.html';
+    }
+
+    if (fs.statSync(filename).isDirectory()) filename += url;
+
     fs.readFile(filename, "binary", function(err, file) {
       if(err) {        
         response.writeHead(500, {"Content-Type": "text/plain"});
